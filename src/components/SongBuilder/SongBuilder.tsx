@@ -19,12 +19,44 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
   const [songName, setSongName] = useState('')
   const [artist, setArtist] = useState('')
   const [key, setKey] = useState('')
-  const [tempo, setTempo] = useState<number | ''>('')
-  const [difficulty, setDifficulty] = useState<number>(1)
-  const [tags, setTags] = useState('')
   const [notes, setNotes] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterType, setFilterType] = useState<'all' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre'>('all')
 
   const getChordById = (id: string) => chords.find(chord => chord.id === id)
+
+  const getFilteredChords = () => {
+    let filtered = chords.filter(chord => 
+      chord.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+    if (filterType !== 'all') {
+      filtered = filtered.filter(chord => {
+        if (chord.isCustom) return false // Only filter default chords by type
+        
+        switch (filterType) {
+          case 'major':
+            return /^[A-G]$/.test(chord.name) && !chord.name.includes('shape)')
+          case 'minor':
+            return chord.name.includes('m') && !chord.name.includes('maj7') && !chord.name.includes('7') && !chord.name.includes('shape)')
+          case 'dominant7':
+            return chord.name.includes('7') && !chord.name.includes('maj7') && !chord.name.includes('shape)')
+          case 'suspended':
+            return chord.name.includes('sus')
+          case 'major7':
+            return chord.name.includes('maj7')
+          case 'power':
+            return chord.name.includes('5') && !chord.name.includes('sus') && !chord.name.includes('shape)')
+          case 'barre':
+            return chord.name.includes('shape)')
+          default:
+            return true
+        }
+      })
+    }
+
+    return filtered
+  }
 
   const addChord = (chordId: string) => {
     onUpdateChords([...selectedChords, chordId])
@@ -48,10 +80,9 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
     setSongName('')
     setArtist('')
     setKey('')
-    setTempo('')
-    setDifficulty(1)
-    setTags('')
     setNotes('')
+    setSearchTerm('')
+    setFilterType('all')
   }
 
   const handleSave = () => {
@@ -72,9 +103,6 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       chords: selectedChords,
       metadata: {
         key: key.trim() || undefined,
-        tempo: tempo ? Number(tempo) : undefined,
-        difficulty,
-        tags: tags.trim() ? tags.split(',').map(tag => tag.trim()) : undefined,
         notes: notes.trim() || undefined
       },
       createdDate: new Date().toISOString().split('T')[0],
@@ -97,9 +125,6 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       chords: selectedChords,
       metadata: {
         key: key.trim() || undefined,
-        tempo: tempo ? Number(tempo) : undefined,
-        difficulty,
-        tags: tags.trim() ? tags.split(',').map(tag => tag.trim()) : undefined,
         notes: notes.trim() || undefined
       },
       createdDate: new Date().toISOString().split('T')[0],
@@ -125,192 +150,175 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
         <h2>Song Builder</h2>
       </div>
 
-      <div className="song-builder__content">
-        <div className="song-builder__sidebar">
-          <div className="song-builder__chord-picker">
-            <h3>Available Chords</h3>
-            <div className="song-builder__chord-grid">
-              {chords.map(chord => (
-                <div
-                  key={chord.id}
-                  className="song-builder__chord-item"
-                  onClick={() => addChord(chord.id)}
-                >
-                  <ChordChart chord={chord} size="small" showName={false} />
-                  <span className="song-builder__chord-name">{chord.name}</span>
-                </div>
-              ))}
+      {/* Song Information - Full Width */}
+      <div className="song-builder__metadata">
+        <h3>Song Information</h3>
+        <div className="song-builder__form">
+          <div className="song-builder__form-row">
+            <div className="song-builder__form-group">
+              <label htmlFor="song-name">Song Name *</label>
+              <input
+                id="song-name"
+                type="text"
+                value={songName}
+                onChange={(e) => setSongName(e.target.value)}
+                placeholder="Enter song name"
+                className="song-builder__input"
+              />
             </div>
-          </div>
-        </div>
-
-        <div className="song-builder__main">
-          <div className="song-builder__metadata">
-            <h3>Song Information</h3>
-            <div className="song-builder__form">
-              <div className="song-builder__form-row">
-                <div className="song-builder__form-group">
-                  <label htmlFor="song-name">Song Name *</label>
-                  <input
-                    id="song-name"
-                    type="text"
-                    value={songName}
-                    onChange={(e) => setSongName(e.target.value)}
-                    placeholder="Enter song name"
-                    className="song-builder__input"
-                  />
-                </div>
-                <div className="song-builder__form-group">
-                  <label htmlFor="artist">Artist</label>
-                  <input
-                    id="artist"
-                    type="text"
-                    value={artist}
-                    onChange={(e) => setArtist(e.target.value)}
-                    placeholder="Enter artist name"
-                    className="song-builder__input"
-                  />
-                </div>
-              </div>
-
-              <div className="song-builder__form-row">
-                <div className="song-builder__form-group">
-                  <label htmlFor="key">Key</label>
-                  <input
-                    id="key"
-                    type="text"
-                    value={key}
-                    onChange={(e) => setKey(e.target.value)}
-                    placeholder="e.g., C, Am, F#"
-                    className="song-builder__input"
-                  />
-                </div>
-                <div className="song-builder__form-group">
-                  <label htmlFor="tempo">Tempo (BPM)</label>
-                  <input
-                    id="tempo"
-                    type="number"
-                    value={tempo}
-                    onChange={(e) => setTempo(e.target.value ? parseInt(e.target.value) : '')}
-                    placeholder="120"
-                    className="song-builder__input"
-                  />
-                </div>
-                <div className="song-builder__form-group">
-                  <label htmlFor="difficulty">Difficulty</label>
-                  <select
-                    id="difficulty"
-                    value={difficulty}
-                    onChange={(e) => setDifficulty(parseInt(e.target.value))}
-                    className="song-builder__select"
-                  >
-                    <option value={1}>1 - Beginner</option>
-                    <option value={2}>2 - Easy</option>
-                    <option value={3}>3 - Medium</option>
-                    <option value={4}>4 - Hard</option>
-                    <option value={5}>5 - Expert</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="song-builder__form-group">
-                <label htmlFor="tags">Tags (comma-separated)</label>
-                <input
-                  id="tags"
-                  type="text"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value)}
-                  placeholder="rock, ballad, acoustic"
-                  className="song-builder__input"
-                />
-              </div>
-
-              <div className="song-builder__form-group">
-                <label htmlFor="notes">Notes</label>
-                <textarea
-                  id="notes"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Additional notes about the song..."
-                  className="song-builder__textarea"
-                  rows={3}
-                />
-              </div>
+            <div className="song-builder__form-group">
+              <label htmlFor="artist">Artist</label>
+              <input
+                id="artist"
+                type="text"
+                value={artist}
+                onChange={(e) => setArtist(e.target.value)}
+                placeholder="Enter artist name"
+                className="song-builder__input"
+              />
+            </div>
+            <div className="song-builder__form-group">
+              <label htmlFor="key">Key</label>
+              <input
+                id="key"
+                type="text"
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                placeholder="e.g., C, Am, F#"
+                className="song-builder__input"
+              />
             </div>
           </div>
 
-          <div className="song-builder__sequence">
-            <h3>Chord Sequence</h3>
-            {selectedChords.length === 0 ? (
-              <div className="song-builder__empty">
-                <p>Click on chords from the left panel to add them to your song</p>
-              </div>
-            ) : (
-              <div className="song-builder__chord-sequence">
-                {selectedChords.map((chordId, index) => {
-                  const chord = getChordById(chordId)
-                  if (!chord) return null
-                  
-                  return (
-                    <div key={index} className="song-builder__sequence-item">
-                      <div className="song-builder__sequence-chord">
-                        <ChordChart chord={chord} size="small" />
-                      </div>
-                      <div className="song-builder__sequence-actions">
-                        {index > 0 && (
-                          <button
-                            onClick={() => moveChord(index, index - 1)}
-                            className="song-builder__sequence-button"
-                            title="Move left"
-                          >
-                            ←
-                          </button>
-                        )}
-                        <button
-                          onClick={() => removeChord(index)}
-                          className="song-builder__sequence-button song-builder__sequence-button--delete"
-                          title="Remove chord"
-                        >
-                          ×
-                        </button>
-                        {index < selectedChords.length - 1 && (
-                          <button
-                            onClick={() => moveChord(index, index + 1)}
-                            className="song-builder__sequence-button"
-                            title="Move right"
-                          >
-                            →
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="song-builder__actions">
-            <button
-              onClick={clearSong}
-              className="song-builder__button song-builder__button--secondary"
-            >
-              Clear All
-            </button>
-            <button
-              onClick={exportToFile}
-              className="song-builder__button song-builder__button--secondary"
-            >
-              Export to File
-            </button>
-            <button
-              onClick={handleSave}
-              className="song-builder__button song-builder__button--primary"
-            >
-              Save Song
-            </button>
+          <div className="song-builder__form-group">
+            <label htmlFor="notes">Notes</label>
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Additional notes about the song..."
+              className="song-builder__textarea"
+              rows={3}
+            />
           </div>
         </div>
+      </div>
+
+      {/* Chord Selection - Full Width */}
+      <div className="song-builder__chord-picker">
+        <div className="song-builder__chord-picker-header">
+          <h3>Available Chords</h3>
+          <div className="song-builder__chord-controls">
+            <input
+              type="text"
+              placeholder="Search chords..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="song-builder__search"
+            />
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value as 'all' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre')}
+              className="song-builder__filter"
+              title="Filter chords by type"
+            >
+              <option value="all">All Chords</option>
+              <option value="major">Major Chords</option>
+              <option value="minor">Minor Chords</option>
+              <option value="dominant7">Dominant 7th Chords</option>
+              <option value="suspended">Suspended Chords</option>
+              <option value="major7">Major 7th Chords</option>
+              <option value="power">Power Chords</option>
+              <option value="barre">Barre Chords</option>
+            </select>
+          </div>
+        </div>
+        <div className="song-builder__chord-grid">
+          {getFilteredChords().map(chord => (
+            <div
+              key={chord.id}
+              className="song-builder__chord-item"
+              onClick={() => addChord(chord.id)}
+            >
+              <ChordChart chord={chord} size="small" showName={false} />
+              <span className="song-builder__chord-name">{chord.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Chord Sequence - Full Width */}
+      <div className="song-builder__sequence">
+        <h3>Chord Sequence</h3>
+        {selectedChords.length === 0 ? (
+          <div className="song-builder__empty">
+            <p>Click on chords above to add them to your song</p>
+          </div>
+        ) : (
+          <div className="song-builder__chord-sequence">
+            {selectedChords.map((chordId, index) => {
+              const chord = getChordById(chordId)
+              if (!chord) return null
+              
+              return (
+                <div key={index} className="song-builder__sequence-item">
+                  <div className="song-builder__sequence-chord">
+                    <ChordChart chord={chord} size="small" />
+                  </div>
+                  <div className="song-builder__sequence-actions">
+                    {index > 0 && (
+                      <button
+                        onClick={() => moveChord(index, index - 1)}
+                        className="song-builder__sequence-button"
+                        title="Move left"
+                      >
+                        ←
+                      </button>
+                    )}
+                    <button
+                      onClick={() => removeChord(index)}
+                      className="song-builder__sequence-button song-builder__sequence-button--delete"
+                      title="Remove chord"
+                    >
+                      ×
+                    </button>
+                    {index < selectedChords.length - 1 && (
+                      <button
+                        onClick={() => moveChord(index, index + 1)}
+                        className="song-builder__sequence-button"
+                        title="Move right"
+                      >
+                        →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="song-builder__actions">
+        <button
+          onClick={clearSong}
+          className="song-builder__button song-builder__button--secondary"
+        >
+          Clear All
+        </button>
+        <button
+          onClick={exportToFile}
+          className="song-builder__button song-builder__button--secondary"
+        >
+          Export to File
+        </button>
+        <button
+          onClick={handleSave}
+          className="song-builder__button song-builder__button--primary"
+        >
+          Save Song
+        </button>
       </div>
     </div>
   )
