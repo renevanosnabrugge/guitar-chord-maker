@@ -40,7 +40,7 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
   }, [editingSong])
 
   const [searchTerm, setSearchTerm] = useState('')
-  const [filterType, setFilterType] = useState<'all' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre'>('all')
+  const [filterType, setFilterType] = useState<'all' | 'custom' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre'>('all')
 
   const getChordById = (id: string) => chords.find(chord => chord.id === id)
 
@@ -51,7 +51,11 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
 
     if (filterType !== 'all') {
       filtered = filtered.filter(chord => {
-        if (chord.isCustom) return false // Only filter default chords by type
+        if (filterType === 'custom') {
+          return chord.isCustom
+        }
+        
+        if (chord.isCustom) return false // Only filter default chords by type for non-custom filters
         
         switch (filterType) {
           case 'major':
@@ -169,6 +173,102 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
         <h2>{editingSong ? 'Edit Song' : 'Song Builder'}</h2>
       </div>
 
+      {/* Chord Sequence - Full Width */}
+      <div className="song-builder__sequence">
+        <h3>Chord Sequence</h3>
+        {selectedChords.length === 0 ? (
+          <div className="song-builder__empty">
+            <p>Click on chords below to add them to your song</p>
+          </div>
+        ) : (
+          <div className="song-builder__chord-sequence">
+            {selectedChords.map((chordId, index) => {
+              const chord = getChordById(chordId)
+              if (!chord) return null
+              
+              return (
+                <div key={index} className="song-builder__sequence-item">
+                  <div className="song-builder__sequence-chord">
+                    <ChordChart chord={chord} size="small" />
+                  </div>
+                  <div className="song-builder__sequence-actions">
+                    {index > 0 && (
+                      <button
+                        onClick={() => moveChord(index, index - 1)}
+                        className="song-builder__sequence-button"
+                        title="Move left"
+                      >
+                        ←
+                      </button>
+                    )}
+                    <button
+                      onClick={() => removeChord(index)}
+                      className="song-builder__sequence-button song-builder__sequence-button--delete"
+                      title="Remove chord"
+                    >
+                      ×
+                    </button>
+                    {index < selectedChords.length - 1 && (
+                      <button
+                        onClick={() => moveChord(index, index + 1)}
+                        className="song-builder__sequence-button"
+                        title="Move right"
+                      >
+                        →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Chord Selection - Full Width */}
+      <div className="song-builder__chord-picker">
+        <div className="song-builder__chord-picker-header">
+          <h3>Available Chords</h3>
+          <div className="song-builder__chord-controls">
+            <input
+              type="text"
+              placeholder="Search chords..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="song-builder__search"
+            />
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value as 'all' | 'custom' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre')}
+              className="song-builder__filter"
+              title="Filter chords by type"
+            >
+              <option value="all">All Chords</option>
+              <option value="custom">Custom Chords</option>
+              <option value="major">Major Chords</option>
+              <option value="minor">Minor Chords</option>
+              <option value="dominant7">Dominant 7th Chords</option>
+              <option value="suspended">Suspended Chords</option>
+              <option value="major7">Major 7th Chords</option>
+              <option value="power">Power Chords</option>
+              <option value="barre">Barre Chords</option>
+            </select>
+          </div>
+        </div>
+        <div className="song-builder__chord-grid">
+          {getFilteredChords().map(chord => (
+            <div
+              key={chord.id}
+              className="song-builder__chord-item"
+              onClick={() => addChord(chord.id)}
+            >
+              <span className="song-builder__chord-name">{chord.name}</span>
+              <ChordChart chord={chord} size="small" showName={false} variant="clean" />
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Song Information - Full Width */}
       <div className="song-builder__metadata">
         <h3>Song Information</h3>
@@ -221,101 +321,6 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
             />
           </div>
         </div>
-      </div>
-
-      {/* Chord Selection - Full Width */}
-      <div className="song-builder__chord-picker">
-        <div className="song-builder__chord-picker-header">
-          <h3>Available Chords</h3>
-          <div className="song-builder__chord-controls">
-            <input
-              type="text"
-              placeholder="Search chords..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="song-builder__search"
-            />
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value as 'all' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre')}
-              className="song-builder__filter"
-              title="Filter chords by type"
-            >
-              <option value="all">All Chords</option>
-              <option value="major">Major Chords</option>
-              <option value="minor">Minor Chords</option>
-              <option value="dominant7">Dominant 7th Chords</option>
-              <option value="suspended">Suspended Chords</option>
-              <option value="major7">Major 7th Chords</option>
-              <option value="power">Power Chords</option>
-              <option value="barre">Barre Chords</option>
-            </select>
-          </div>
-        </div>
-        <div className="song-builder__chord-grid">
-          {getFilteredChords().map(chord => (
-            <div
-              key={chord.id}
-              className="song-builder__chord-item"
-              onClick={() => addChord(chord.id)}
-            >
-              <ChordChart chord={chord} size="small" showName={false} variant="clean" />
-              <span className="song-builder__chord-name">{chord.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Chord Sequence - Full Width */}
-      <div className="song-builder__sequence">
-        <h3>Chord Sequence</h3>
-        {selectedChords.length === 0 ? (
-          <div className="song-builder__empty">
-            <p>Click on chords above to add them to your song</p>
-          </div>
-        ) : (
-          <div className="song-builder__chord-sequence">
-            {selectedChords.map((chordId, index) => {
-              const chord = getChordById(chordId)
-              if (!chord) return null
-              
-              return (
-                <div key={index} className="song-builder__sequence-item">
-                  <div className="song-builder__sequence-chord">
-                    <ChordChart chord={chord} size="small" />
-                  </div>
-                  <div className="song-builder__sequence-actions">
-                    {index > 0 && (
-                      <button
-                        onClick={() => moveChord(index, index - 1)}
-                        className="song-builder__sequence-button"
-                        title="Move left"
-                      >
-                        ←
-                      </button>
-                    )}
-                    <button
-                      onClick={() => removeChord(index)}
-                      className="song-builder__sequence-button song-builder__sequence-button--delete"
-                      title="Remove chord"
-                    >
-                      ×
-                    </button>
-                    {index < selectedChords.length - 1 && (
-                      <button
-                        onClick={() => moveChord(index, index + 1)}
-                        className="song-builder__sequence-button"
-                        title="Move right"
-                      >
-                        →
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
       </div>
 
       {/* Actions */}

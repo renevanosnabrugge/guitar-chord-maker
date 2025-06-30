@@ -139,6 +139,38 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
         </div>
       </div>
 
+      {/* Custom Chords Section - Always First */}
+      {(filterType === 'all' || filterType === 'custom') && customChords.length > 0 && (
+        <div className="chord-library__section">
+          <h3>Custom Chords</h3>
+          <div className="chord-library__grid">
+            {customChords.map(chord => (
+              <div key={chord.id} className="chord-library__custom-item">
+                <ChordChart chord={chord} size="small" />
+                <div className="chord-library__actions">
+                  <button
+                    onClick={() => onEditChord(chord)}
+                    className="chord-library__action chord-library__action--edit"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Are you sure you want to delete the chord "${chord.name}"?`)) {
+                        onDeleteChord(chord.id)
+                      }
+                    }}
+                    className="chord-library__action chord-library__action--delete"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {(filterType === 'all' || filterType === 'default') && chordCategories.map(category => (
         <div key={category.name} className="chord-library__section">
           <h3>{category.name}</h3>
@@ -172,37 +204,6 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
                 chord={chord} 
                 size="small" 
               />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {(filterType === 'all' || filterType === 'custom') && customChords.length > 0 && (
-        <div className="chord-library__section">
-          <h3>Custom Chords</h3>
-          <div className="chord-library__grid">
-            {customChords.map(chord => (
-              <div key={chord.id} className="chord-library__custom-item">
-                <ChordChart chord={chord} size="small" />
-                <div className="chord-library__actions">
-                  <button
-                    onClick={() => onEditChord(chord)}
-                    className="chord-library__action chord-library__action--edit"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (confirm(`Are you sure you want to delete the chord "${chord.name}"?`)) {
-                        onDeleteChord(chord.id)
-                      }
-                    }}
-                    className="chord-library__action chord-library__action--delete"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
             ))}
           </div>
         </div>
