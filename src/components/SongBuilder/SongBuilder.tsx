@@ -31,6 +31,14 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
   const [activePatternId, setActivePatternId] = useState<string | null>(null)
   const patternInputRef = useRef<HTMLDivElement>(null)
 
+  // Chord suggestion state
+  const [showChordSuggestions, setShowChordSuggestions] = useState(false)
+  const [suggestionTitle, setSuggestionTitle] = useState('')
+  const [suggestionArtist, setSuggestionArtist] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const [suggestedChords, setSuggestedChords] = useState<string[]>([])
+  const [searchError, setSearchError] = useState<string | null>(null)
+
   // Load editing song data when component mounts or editingSong changes
   useEffect(() => {
     if (editingSong) {
@@ -128,6 +136,12 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
     setStrummingPatterns([{ id: 'general', name: 'General', pattern: '' }])
     setShowStrummingPatterns(false)
     setActivePatternId(null)
+    // Clear suggestions
+    setShowChordSuggestions(false)
+    setSuggestionTitle('')
+    setSuggestionArtist('')
+    setSuggestedChords([])
+    setSearchError(null)
   }
 
   // Strumming pattern functions
@@ -195,6 +209,106 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
     if (newChar) {
       updatePatternContent(patternId, pattern.pattern + newChar)
     }
+  }
+
+  // Chord suggestion functions
+  const searchChords = async () => {
+    if (!suggestionTitle.trim() || !suggestionArtist.trim()) {
+      setSearchError('Please enter both title and artist')
+      return
+    }
+
+    setIsSearching(true)
+    setSearchError(null)
+    setSuggestedChords([])
+
+    try {
+      // Mock chord suggestion - In a real implementation, you would call an API
+      // This simulates searching for chords online
+      await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API delay
+
+      /* 
+       * REAL API INTEGRATION EXAMPLE:
+       * 
+       * const response = await fetch(`/api/chords/search`, {
+       *   method: 'POST',
+       *   headers: { 'Content-Type': 'application/json' },
+       *   body: JSON.stringify({
+       *     title: suggestionTitle,
+       *     artist: suggestionArtist
+       *   })
+       * })
+       * 
+       * if (!response.ok) {
+       *   throw new Error('Failed to fetch chord suggestions')
+       * }
+       * 
+       * const data = await response.json()
+       * setSuggestedChords(data.chords || [])
+       * 
+       * Alternative APIs you could integrate with:
+       * - Ultimate Guitar API
+       * - Songsterr API 
+       * - ChordPro databases
+       * - Custom AI/ML chord prediction services
+       */
+
+      // Mock chord suggestions based on common progressions
+      const mockChordSuggestions = [
+        ['C', 'Am', 'F', 'G'], // I-vi-IV-V progression in C
+        ['G', 'Em', 'C', 'D'], // I-vi-IV-V progression in G
+        ['Am', 'F', 'C', 'G'], // vi-IV-I-V progression
+        ['D', 'A', 'Bm', 'G'], // I-V-vi-IV progression in D
+        ['E', 'A', 'B', 'C#m'], // Common rock progression
+        ['F', 'C', 'Dm', 'Bb'], // I-V-vi-III progression in F
+      ]
+
+      // Randomly select one of the progressions
+      const randomProgression = mockChordSuggestions[Math.floor(Math.random() * mockChordSuggestions.length)]
+      setSuggestedChords(randomProgression)
+      
+      // Auto-fill song details
+      setSongName(suggestionTitle)
+      setArtist(suggestionArtist)
+      
+    } catch (error) {
+      setSearchError('Failed to search for chords. Please try again.')
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  const applySuggestedChords = () => {
+    // Find chord IDs that match the suggested chord names
+    const chordIds: string[] = []
+    
+    suggestedChords.forEach(chordName => {
+      const chord = chords.find(c => c.name === chordName)
+      if (chord) {
+        chordIds.push(chord.id)
+      }
+    })
+
+    // Update the chord sequence with suggested chords
+    onUpdateChords(chordIds)
+    
+    // Close the suggestions panel
+    setShowChordSuggestions(false)
+    
+    // Show a message about applied chords
+    const appliedCount = chordIds.length
+    const totalSuggested = suggestedChords.length
+    if (appliedCount < totalSuggested) {
+      alert(`Applied ${appliedCount} of ${totalSuggested} suggested chords. Some chords were not found in your chord library.`)
+    }
+  }
+
+  const clearSuggestions = () => {
+    setSuggestedChords([])
+    setSuggestionTitle('')
+    setSuggestionArtist('')
+    setSearchError(null)
+    setShowChordSuggestions(false)
   }
 
   const handleSave = () => {
@@ -267,12 +381,20 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       <div className="song-builder__sequence">
         <div className="song-builder__sequence-header">
           <h3>Chord Sequence</h3>
-          <button
-            onClick={() => setShowStrummingPatterns(!showStrummingPatterns)}
-            className={`song-builder__toggle-button ${showStrummingPatterns ? 'song-builder__toggle-button--active' : ''}`}
-          >
-            {showStrummingPatterns ? 'Hide' : 'Show'} Strumming Patterns
-          </button>
+          <div className="song-builder__sequence-actions">
+            <button
+              onClick={() => setShowStrummingPatterns(!showStrummingPatterns)}
+              className={`song-builder__toggle-button ${showStrummingPatterns ? 'song-builder__toggle-button--active' : ''}`}
+            >
+              {showStrummingPatterns ? 'Hide' : 'Show'} Strumming Patterns
+            </button>
+            <button
+              onClick={() => setShowChordSuggestions(!showChordSuggestions)}
+              className={`song-builder__toggle-button ${showChordSuggestions ? 'song-builder__toggle-button--active' : ''}`}
+            >
+              {showChordSuggestions ? 'Hide' : 'Suggest Chords'}
+            </button>
+          </div>
         </div>
         {selectedChords.length === 0 ? (
           <div className="song-builder__empty">
@@ -413,6 +535,108 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
               </span>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Chord Suggestions Section */}
+      {showChordSuggestions && (
+        <div className="song-builder__suggestions">
+          <div className="song-builder__suggestions-header">
+            <h3>Chord Suggestions</h3>
+            <button
+              onClick={clearSuggestions}
+              className="song-builder__clear-button"
+              title="Clear suggestions"
+            >
+              Clear
+            </button>
+          </div>
+          
+          <div className="song-builder__search-form">
+            <div className="song-builder__search-inputs">
+              <div className="song-builder__search-group">
+                <label htmlFor="suggestion-title">Song Title</label>
+                <input
+                  id="suggestion-title"
+                  type="text"
+                  value={suggestionTitle}
+                  onChange={(e) => setSuggestionTitle(e.target.value)}
+                  placeholder="Enter song title"
+                  className="song-builder__search-input"
+                  disabled={isSearching}
+                />
+              </div>
+              <div className="song-builder__search-group">
+                <label htmlFor="suggestion-artist">Artist</label>
+                <input
+                  id="suggestion-artist"
+                  type="text"
+                  value={suggestionArtist}
+                  onChange={(e) => setSuggestionArtist(e.target.value)}
+                  placeholder="Enter artist name"
+                  className="song-builder__search-input"
+                  disabled={isSearching}
+                />
+              </div>
+              <button
+                onClick={searchChords}
+                disabled={isSearching || !suggestionTitle.trim() || !suggestionArtist.trim()}
+                className="song-builder__search-button"
+              >
+                {isSearching ? 'Searching...' : 'Search Chords'}
+              </button>
+            </div>
+            
+            {searchError && (
+              <div className="song-builder__search-error">
+                {searchError}
+              </div>
+            )}
+          </div>
+
+          {suggestedChords.length > 0 && (
+            <div className="song-builder__suggested-chords">
+              <div className="song-builder__suggested-header">
+                <h4>Suggested Chord Progression</h4>
+                <div className="song-builder__suggested-actions">
+                  <button
+                    onClick={applySuggestedChords}
+                    className="song-builder__apply-button"
+                  >
+                    Apply These Chords
+                  </button>
+                </div>
+              </div>
+              
+              <div className="song-builder__suggested-list">
+                {suggestedChords.map((chordName, index) => {
+                  const chord = chords.find(c => c.name === chordName)
+                  return (
+                    <div key={index} className="song-builder__suggested-chord">
+                      <span className="song-builder__suggested-name">
+                        {chordName}
+                      </span>
+                      {chord ? (
+                        <ChordChart chord={chord} size="small" showName={false} variant="clean" />
+                      ) : (
+                        <div className="song-builder__chord-not-found">
+                          <span>Not in library</span>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+              
+              <div className="song-builder__suggestion-note">
+                <p>
+                  <strong>Note:</strong> This is a demo implementation. In a real application, 
+                  this would search online chord databases or APIs to find actual chord progressions 
+                  for the specified song.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

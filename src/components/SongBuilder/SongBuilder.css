@@ -512,6 +512,11 @@
   color: black;
 }
 
+.song-builder__sequence-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .song-builder__toggle-button {
   background: white;
   border: 1px solid black;
@@ -536,69 +541,226 @@
   background: #333;
 }
 
+/* Chord Suggestions Section */
+.song-builder__suggestions {
+  background: white;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+}
+
+.song-builder__suggestions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.song-builder__suggestions-header h3 {
+  margin: 0;
+  color: black;
+}
+
+.song-builder__clear-button {
+  background: #f5f5f5;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: black;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.song-builder__clear-button:hover {
+  background: #e5e5e5;
+}
+
+.song-builder__search-form {
+  margin-bottom: 20px;
+}
+
+.song-builder__search-inputs {
+  display: flex;
+  gap: 15px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.song-builder__search-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 200px;
+  flex: 1;
+}
+
+.song-builder__search-group label {
+  font-weight: 500;
+  color: black;
+  font-size: 14px;
+}
+
+.song-builder__search-input {
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 16px;
+  background: white;
+}
+
+.song-builder__search-input:focus {
+  outline: none;
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.song-builder__search-input:disabled {
+  background: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.song-builder__search-button {
+  background: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.song-builder__search-button:hover:not(:disabled) {
+  background: #333;
+}
+
+.song-builder__search-button:disabled {
+  background: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.song-builder__search-error {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  padding: 10px;
+  color: #c44;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.song-builder__suggested-chords {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.song-builder__suggested-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.song-builder__suggested-header h4 {
+  margin: 0;
+  color: black;
+  font-size: 18px;
+}
+
+.song-builder__apply-button {
+  background: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.song-builder__apply-button:hover {
+  background: #45a049;
+}
+
+.song-builder__suggested-list {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.song-builder__suggested-chord {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+  min-width: 80px;
+}
+
+.song-builder__suggested-name {
+  font-weight: 500;
+  color: black;
+  font-size: 14px;
+}
+
+.song-builder__chord-not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  background: #f9f9f9;
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+}
+
+.song-builder__suggestion-note {
+  background: #f0f8ff;
+  border: 1px solid #d0e8ff;
+  border-radius: 4px;
+  padding: 12px;
+  color: #2c5aa0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.song-builder__suggestion-note p {
+  margin: 0;
+}
+
+/* Responsive design for search inputs */
 @media (max-width: 768px) {
-  .song-builder__chord-picker-header {
+  .song-builder__search-inputs {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .song-builder__chord-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .song-builder__search {
+  .song-builder__search-group {
     min-width: auto;
-    width: 100%;
   }
   
-  .song-builder__chord-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    max-height: calc(2 * 110px + 1 * 10px); /* 2 rows on mobile with smaller height */
-    gap: 10px 20px; /* 10px vertical, 20px horizontal */
-  }
-  
-  .song-builder__chord-item {
-    height: 110px; /* Smaller on mobile */
-    padding: 3px;
-  }
-  
-  .song-builder__form-row {
-    grid-template-columns: 1fr;
-  }
-  
-  .song-builder__chord-sequence {
+  .song-builder__suggested-list {
     justify-content: center;
   }
   
-  .song-builder__actions {
-    flex-direction: column;
-  }
-  
-  .song-builder__strumming-header {
+  .song-builder__suggested-header {
     flex-direction: column;
     gap: 10px;
     align-items: stretch;
-  }
-  
-  .song-builder__sequence-header {
-    flex-direction: column;
-    gap: 10px;
-    align-items: stretch;
-  }
-  
-  .song-builder__legend-items {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .song-builder__pattern-display {
-    gap: 4px;
-  }
-  
-  .song-builder__pattern-char {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
   }
 }
