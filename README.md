@@ -2,6 +2,8 @@
 
 A modern web application for creating, managing, and organizing guitar chords and songs. Built with React, TypeScript, and Vite.
 
+🌐 **Live Demo**: [https://renevanosnabrugge.github.io/guitar-chord-maker/](https://renevanosnabrugge.github.io/guitar-chord-maker/)
+
 ## Features
 
 ### 🎸 Chord Management
@@ -12,6 +14,8 @@ A modern web application for creating, managing, and organizing guitar chords an
 
 ### 🎵 Song Building
 - **Song Builder**: Combine chords into sequences to create songs
+- **Suggest Chords**: Search for chord progressions by song title and artist
+- **Strumming Patterns**: Add and edit strumming patterns for your songs
 - **Drag and Drop**: Easily arrange chord progressions
 - **Song Metadata**: Add artist, key, tempo, difficulty, and notes
 - **Song Preview**: Visual representation of your chord sequences
@@ -55,6 +59,31 @@ npm run build
 ```
 
 The built files will be in the `dist` directory.
+
+### Deployment
+
+This project is automatically deployed to GitHub Pages using GitHub Actions. Every push to the `main` branch triggers a new deployment.
+
+- **Live Site**: [https://renevanosnabrugge.github.io/guitar-chord-maker/](https://renevanosnabrugge.github.io/guitar-chord-maker/)
+- **Deployment Workflow**: `.github/workflows/deploy.yml`
+- **Build Configuration**: `vite.config.ts` (configured for GitHub Pages)
+
+#### Manual Deployment
+
+To deploy manually:
+
+1. Build the project: `npm run build`
+2. The built files in `dist/` can be deployed to any static hosting service
+3. Ensure the `base` path in `vite.config.ts` matches your deployment path
+
+#### GitHub Pages Setup
+
+The repository includes a GitHub Actions workflow that:
+1. Builds the React application using Vite
+2. Uploads the build artifacts
+3. Deploys to GitHub Pages automatically
+
+Make sure GitHub Pages is enabled in your repository settings and set to deploy from GitHub Actions.
 
 ## Project Structure
 
