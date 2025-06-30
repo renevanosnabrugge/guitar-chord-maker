@@ -7,7 +7,17 @@
 }
 
 .song-builder__header {
-  margin-bottom: 0;
+  mar.song-builder__chord-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  column-gap: 25px;
+  row-gap: 15px;
+  max-height: calc(3 * 130px + 2 * 15px); /* 3 rows with gaps */
+  overflow-y: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}: 0;
   padding-bottom: 20px;
   border-bottom: 1px solid black;
 }
@@ -153,7 +163,7 @@
 .song-builder__chord-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
+  gap: 15px 25px; /* 15px vertical, 25px horizontal */
   max-height: calc(3 * 130px + 2 * 15px); /* 3 rows with updated height */
   overflow-y: auto;
   padding: 0;
@@ -326,7 +336,7 @@
   .song-builder__chord-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     max-height: calc(2 * 110px + 1 * 10px); /* 2 rows on mobile with smaller height */
-    gap: 10px;
+    gap: 10px 20px; /* 10px vertical, 20px horizontal */
   }
   
   .song-builder__chord-item {

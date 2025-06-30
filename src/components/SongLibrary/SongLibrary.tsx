@@ -191,6 +191,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'name' | 'artist' | 'date')}
             className="song-library__select"
+            title="Sort songs by"
           >
             <option value="name">Sort by Name</option>
             <option value="artist">Sort by Artist</option>
@@ -248,7 +249,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
                     
                     return (
                       <div key={index} className="song-library__chord-preview-item">
-                        <ChordChart chord={chord} size="small" showName={false} />
+                        <ChordChart chord={chord} size="tiny" showName={false} variant="clean" />
                         <span>{chord.name}</span>
                       </div>
                     )

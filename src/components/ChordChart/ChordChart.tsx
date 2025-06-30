@@ -3,7 +3,7 @@ import './ChordChart.css'
 
 interface ChordChartProps {
   chord: Chord
-  size?: 'small' | 'medium' | 'large'
+  size?: 'tiny' | 'small' | 'medium' | 'large'
   showName?: boolean
   variant?: 'default' | 'clean'
 }
@@ -37,6 +37,7 @@ export const ChordChart: React.FC<ChordChartProps> = ({
   
   // Size settings for SVG
   const sizeSettings = {
+    tiny: { width: 45, height: 36, cellWidth: 6, cellHeight: 6, fontSize: 6 },
     small: { width: 150, height: 120, cellWidth: 20, cellHeight: 20, fontSize: 10 },
     medium: { width: 180, height: 140, cellWidth: 24, cellHeight: 24, fontSize: 12 },
     large: { width: 220, height: 180, cellWidth: 30, cellHeight: 30, fontSize: 14 }
@@ -45,7 +46,8 @@ export const ChordChart: React.FC<ChordChartProps> = ({
   const { width, height, cellWidth, cellHeight, fontSize } = sizeSettings[size]
   
   const getSizeClass = () => {
-    const sizeClass = size === 'small' ? 'chord-chart--small' 
+    const sizeClass = size === 'tiny' ? 'chord-chart--tiny'
+                    : size === 'small' ? 'chord-chart--small' 
                     : size === 'large' ? 'chord-chart--large'
                     : 'chord-chart--medium'
     const variantClass = variant === 'clean' ? 'chord-chart--clean' : ''

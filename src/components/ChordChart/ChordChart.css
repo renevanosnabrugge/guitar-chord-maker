@@ -39,6 +39,15 @@
 }
 
 /* Size variants */
+.chord-chart--tiny {
+  padding: 2px;
+}
+
+.chord-chart--tiny .chord-chart__name {
+  font-size: 0.7em;
+  margin-bottom: 2px;
+}
+
 .chord-chart--small {
   padding: 5px;
 }

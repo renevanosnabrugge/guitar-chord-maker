@@ -134,6 +134,7 @@
 
 .song-library__card-content {
   margin-bottom: 15px;
+  overflow: hidden;
 }
 
 .song-library__song-info {
@@ -153,8 +154,10 @@
 
 .song-library__chord-preview {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .song-library__chord-preview-item {
@@ -162,11 +165,38 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  max-width: 45px;
+  min-width: 45px;
+}
+
+.song-library__chord-preview-item .chord-chart {
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: 45px;
+  max-height: 36px;
+  overflow: hidden;
+}
+
+.song-library__chord-preview-item .chord-chart__diagram {
+  max-width: 45px;
+  max-height: 36px;
+  overflow: hidden;
+}
+
+.song-library__chord-preview-item .chord-chart__svg {
+  max-width: 45px !important;
+  max-height: 36px !important;
 }
 
 .song-library__chord-preview-item span {
-  font-size: 10px;
+  font-size: 8px;
   color: black;
+  text-align: center;
+  max-width: 45px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .song-library__chord-more {
