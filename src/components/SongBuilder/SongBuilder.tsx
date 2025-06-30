@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Chord, Song } from '../../types'
 import { ChordChart } from '../ChordChart/ChordChart'
 import './SongBuilder.css'
@@ -8,18 +8,37 @@ interface SongBuilderProps {
   selectedChords: string[]
   onUpdateChords: (chords: string[]) => void
   onSaveSong: (song: Song) => void
+  editingSong?: Song | null
 }
 
 export const SongBuilder: React.FC<SongBuilderProps> = ({
   chords,
   selectedChords,
   onUpdateChords,
-  onSaveSong
+  onSaveSong,
+  editingSong
 }) => {
   const [songName, setSongName] = useState('')
   const [artist, setArtist] = useState('')
   const [key, setKey] = useState('')
   const [notes, setNotes] = useState('')
+
+  // Load editing song data when component mounts or editingSong changes
+  useEffect(() => {
+    if (editingSong) {
+      setSongName(editingSong.name)
+      setArtist(editingSong.artist || '')
+      setKey(editingSong.metadata?.key || '')
+      setNotes(editingSong.metadata?.notes || '')
+    } else {
+      // Reset form when not editing
+      setSongName('')
+      setArtist('')
+      setKey('')
+      setNotes('')
+    }
+  }, [editingSong])
+
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'major' | 'minor' | 'dominant7' | 'suspended' | 'major7' | 'power' | 'barre'>('all')
 
@@ -97,7 +116,7 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
     }
 
     const song: Song = {
-      id: `song-${Date.now()}`,
+      id: editingSong ? editingSong.id : `song-${Date.now()}`,
       name: songName.trim(),
       artist: artist.trim() || undefined,
       chords: selectedChords,
@@ -105,7 +124,7 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
         key: key.trim() || undefined,
         notes: notes.trim() || undefined
       },
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: editingSong ? editingSong.createdDate : new Date().toISOString().split('T')[0],
       modifiedDate: new Date().toISOString().split('T')[0]
     }
 
@@ -147,7 +166,7 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
   return (
     <div className="song-builder">
       <div className="song-builder__header">
-        <h2>Song Builder</h2>
+        <h2>{editingSong ? 'Edit Song' : 'Song Builder'}</h2>
       </div>
 
       {/* Song Information - Full Width */}

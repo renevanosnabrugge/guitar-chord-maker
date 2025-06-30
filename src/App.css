@@ -50,21 +50,20 @@
   border-color: black;
 }
 
+.backup-button {
+  background: #2ed573 !important;
+  border-color: #2ed573 !important;
+  color: white !important;
+}
+
+.backup-button:hover {
+  background: #26c265 !important;
+  border-color: #26c265 !important;
+}
+
 .main {
   flex: 1;
   padding: 20px 0;
-}
-
-@media (max-width: 768px) {
-  .nav {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .nav-buttons {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
 }
 
 @media (max-width: 768px) {

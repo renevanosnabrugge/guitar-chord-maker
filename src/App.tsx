@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChordLibrary } from './components/ChordLibrary/ChordLibrary'
 import { ChordEditor } from './components/ChordEditor/ChordEditor'
 import { SongBuilder } from './components/SongBuilder/SongBuilder'
 import { SongLibrary } from './components/SongLibrary/SongLibrary'
 import { Chord, Song } from './types'
 import { defaultChords } from './data/defaultChords'
+import {
+  loadCustomChords,
+  addCustomChord,
+  updateCustomChord,
+  deleteCustomChord,
+  loadSongs,
+  addSong,
+  updateSong,
+  deleteSong,
+  exportAllData
+} from './utils/storage'
 import './App.css'
 
 type ViewMode = 'chord-library' | 'chord-editor' | 'song-builder' | 'song-library'
@@ -15,14 +26,25 @@ function App() {
   const [songs, setSongs] = useState<Song[]>([])
   const [selectedChords, setSelectedChords] = useState<string[]>([])
   const [editingChord, setEditingChord] = useState<Chord | null>(null)
+  const [editingSong, setEditingSong] = useState<Song | null>(null)
+
+  // Load data from storage on app start
+  useEffect(() => {
+    const storedChords = loadCustomChords()
+    const storedSongs = loadSongs()
+    setCustomChords(storedChords)
+    setSongs(storedSongs)
+  }, [])
 
   const allChords = [...defaultChords, ...customChords]
 
   const handleSaveChord = (chord: Chord) => {
     if (editingChord) {
-      setCustomChords(prev => prev.map(c => c.id === chord.id ? chord : c))
+      const updatedChords = updateCustomChord(chord)
+      setCustomChords(updatedChords)
     } else {
-      setCustomChords(prev => [...prev, chord])
+      const updatedChords = addCustomChord(chord)
+      setCustomChords(updatedChords)
     }
     setEditingChord(null)
     setCurrentView('chord-library')
@@ -34,17 +56,32 @@ function App() {
   }
 
   const handleDeleteChord = (chordId: string) => {
-    setCustomChords(prev => prev.filter(c => c.id !== chordId))
+    const updatedChords = deleteCustomChord(chordId)
+    setCustomChords(updatedChords)
   }
 
   const handleSaveSong = (song: Song) => {
-    setSongs(prev => [...prev, song])
+    if (editingSong) {
+      const updatedSongs = updateSong(song)
+      setSongs(updatedSongs)
+    } else {
+      const updatedSongs = addSong(song)
+      setSongs(updatedSongs)
+    }
+    setEditingSong(null)
     setSelectedChords([])
     setCurrentView('song-library')
   }
 
   const handleDeleteSong = (songId: string) => {
-    setSongs(prev => prev.filter(s => s.id !== songId))
+    const updatedSongs = deleteSong(songId)
+    setSongs(updatedSongs)
+  }
+
+  const handleEditSong = (song: Song) => {
+    setEditingSong(song)
+    setSelectedChords(song.chords)
+    setCurrentView('song-builder')
   }
 
   const renderCurrentView = () => {
@@ -76,6 +113,7 @@ function App() {
             selectedChords={selectedChords}
             onUpdateChords={setSelectedChords}
             onSaveSong={handleSaveSong}
+            editingSong={editingSong}
           />
         )
       case 'song-library':
@@ -84,10 +122,7 @@ function App() {
             songs={songs}
             chords={allChords}
             onDeleteSong={handleDeleteSong}
-            onEditSong={(song) => {
-              setSelectedChords(song.chords)
-              setCurrentView('song-builder')
-            }}
+            onEditSong={handleEditSong}
           />
         )
       default:
@@ -117,7 +152,11 @@ function App() {
           </button>
           <button
             className={currentView === 'song-builder' ? 'active' : ''}
-            onClick={() => setCurrentView('song-builder')}
+            onClick={() => {
+              setEditingSong(null)
+              setSelectedChords([])
+              setCurrentView('song-builder')
+            }}
           >
             Build Song
           </button>
@@ -126,6 +165,13 @@ function App() {
             onClick={() => setCurrentView('song-library')}
           >
             Song Library
+          </button>
+          <button
+            onClick={exportAllData}
+            className="backup-button"
+            title="Export all data as backup"
+          >
+            📥 Backup
           </button>
         </div>
       </nav>
