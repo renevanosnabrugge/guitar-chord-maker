@@ -6,12 +6,12 @@
 .song-builder__header {
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid black;
 }
 
 .song-builder__header h2 {
   margin: 0;
-  color: #646cff;
+  color: black;
 }
 
 .song-builder__content {
@@ -21,8 +21,8 @@
 }
 
 .song-builder__sidebar {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: white;
+  border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
   height: fit-content;
@@ -32,7 +32,7 @@
 
 .song-builder__chord-picker h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
 }
 
 .song-builder__chord-grid {
@@ -48,22 +48,22 @@
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #2a2a2a;
+  background: white;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .song-builder__chord-item:hover {
-  border-color: #646cff;
+  border-color: black;
   transform: translateY(-1px);
 }
 
 .song-builder__chord-name {
   margin-top: 5px;
   font-size: 12px;
-  color: #999;
+  color: black;
   font-weight: bold;
 }
 
@@ -74,15 +74,15 @@
 }
 
 .song-builder__metadata {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: white;
+  border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
 }
 
 .song-builder__metadata h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
 }
 
 .song-builder__form {
@@ -105,7 +105,7 @@
 
 .song-builder__form-group label {
   font-weight: bold;
-  color: #999;
+  color: black;
   font-size: 14px;
 }
 
@@ -113,9 +113,9 @@
 .song-builder__select,
 .song-builder__textarea {
   padding: 10px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #2a2a2a;
+  background: white;
   color: inherit;
   font-size: 14px;
 }
@@ -124,7 +124,7 @@
 .song-builder__select:focus,
 .song-builder__textarea:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: black;
 }
 
 .song-builder__textarea {
@@ -133,22 +133,22 @@
 }
 
 .song-builder__sequence {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: white;
+  border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
 }
 
 .song-builder__sequence h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
 }
 
 .song-builder__empty {
   text-align: center;
   padding: 40px 20px;
-  color: #666;
-  border: 2px dashed #333;
+  color: black;
+  border: 2px dashed black;
   border-radius: 8px;
 }
 
@@ -166,9 +166,9 @@
 }
 
 .song-builder__sequence-chord {
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #2a2a2a;
+  background: white;
   padding: 10px;
 }
 
@@ -180,7 +180,7 @@
 .song-builder__sequence-button {
   width: 24px;
   height: 24px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 4px;
   background: transparent;
   color: inherit;
@@ -193,7 +193,7 @@
 }
 
 .song-builder__sequence-button:hover {
-  border-color: #646cff;
+  border-color: black;
   background: rgba(100, 108, 255, 0.1);
 }
 
@@ -212,12 +212,12 @@
   gap: 15px;
   justify-content: flex-end;
   padding-top: 20px;
-  border-top: 1px solid #333;
+  border-top: 1px solid black;
 }
 
 .song-builder__button {
   padding: 12px 24px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
   font-size: 14px;
   font-weight: bold;
@@ -226,8 +226,8 @@
 }
 
 .song-builder__button--primary {
-  background: #646cff;
-  border-color: #646cff;
+  background: black;
+  border-color: black;
   color: white;
 }
 
@@ -242,7 +242,7 @@
 }
 
 .song-builder__button--secondary:hover {
-  border-color: #646cff;
+  border-color: black;
   background: rgba(100, 108, 255, 0.1);
 }
 

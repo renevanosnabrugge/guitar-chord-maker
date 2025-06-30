@@ -6,12 +6,12 @@
 .chord-editor__header {
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid black;
 }
 
 .chord-editor__header h2 {
   margin: 0;
-  color: #646cff;
+  color: black;
 }
 
 .chord-editor__content {
@@ -34,26 +34,26 @@
 
 .chord-editor__name-input label {
   font-weight: bold;
-  color: #999;
+  color: black;
 }
 
 .chord-editor__input {
   padding: 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #1a1a1a;
-  color: inherit;
+  background: white;
+  color: black;
   font-size: 16px;
 }
 
 .chord-editor__input:focus {
-  outline: none;
-  border-color: #646cff;
+  outline: 2px solid black;
+  border-color: black;
 }
 
 .chord-editor__fretboard h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
 }
 
 .chord-editor__strings {
@@ -67,9 +67,9 @@
   align-items: center;
   gap: 15px;
   padding: 15px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #1a1a1a;
+  background: white;
 }
 
 .chord-editor__string-header {
@@ -78,7 +78,7 @@
 
 .chord-editor__string-name {
   font-weight: bold;
-  color: #646cff;
+  color: black;
   font-size: 18px;
 }
 
@@ -93,22 +93,22 @@
 .chord-editor__fret-controls label,
 .chord-editor__finger-controls label {
   font-size: 12px;
-  color: #999;
+  color: black;
   font-weight: bold;
 }
 
 .chord-editor__select {
   padding: 6px 8px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 4px;
-  background: #2a2a2a;
-  color: inherit;
+  background: white;
+  color: black;
   font-size: 14px;
 }
 
 .chord-editor__select:focus {
-  outline: none;
-  border-color: #646cff;
+  outline: 2px solid black;
+  border-color: black;
 }
 
 .chord-editor__actions {
@@ -116,12 +116,12 @@
   gap: 15px;
   justify-content: flex-end;
   padding-top: 20px;
-  border-top: 1px solid #333;
+  border-top: 1px solid black;
 }
 
 .chord-editor__button {
   padding: 12px 24px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
   font-size: 14px;
   font-weight: bold;
@@ -130,24 +130,25 @@
 }
 
 .chord-editor__button--primary {
-  background: #646cff;
-  border-color: #646cff;
+  background: black;
+  border-color: black;
   color: white;
 }
 
 .chord-editor__button--primary:hover {
-  background: #535bf2;
-  border-color: #535bf2;
+  background: #333;
+  border-color: #333;
 }
 
 .chord-editor__button--secondary {
-  background: transparent;
-  color: inherit;
+  background: white;
+  color: black;
 }
 
 .chord-editor__button--secondary:hover {
-  border-color: #646cff;
-  background: rgba(100, 108, 255, 0.1);
+  background: black;
+  color: white;
+  border-color: black;
 }
 
 .chord-editor__preview {
@@ -155,9 +156,9 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 8px;
-  background: #1a1a1a;
+  background: white;
   height: fit-content;
   position: sticky;
   top: 20px;
@@ -165,7 +166,7 @@
 
 .chord-editor__preview h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
 }
 
 @media (max-width: 768px) {

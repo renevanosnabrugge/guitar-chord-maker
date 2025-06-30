@@ -9,12 +9,12 @@
   align-items: center;
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid black;
 }
 
 .chord-library__header h2 {
   margin: 0;
-  color: #646cff;
+  color: black;
 }
 
 .chord-library__controls {
@@ -25,31 +25,31 @@
 
 .chord-library__search {
   padding: 8px 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #1a1a1a;
-  color: inherit;
+  background: white;
+  color: black;
   font-size: 14px;
   width: 200px;
 }
 
 .chord-library__search:focus {
-  outline: none;
-  border-color: #646cff;
+  outline: 2px solid black;
+  border-color: black;
 }
 
 .chord-library__filter {
   padding: 8px 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #1a1a1a;
-  color: inherit;
+  background: white;
+  color: black;
   font-size: 14px;
 }
 
 .chord-library__filter:focus {
-  outline: none;
-  border-color: #646cff;
+  outline: 2px solid black;
+  border-color: black;
 }
 
 .chord-library__section {
@@ -58,7 +58,7 @@
 
 .chord-library__section h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
   font-size: 1.2em;
 }
 
@@ -73,14 +73,14 @@
   flex-direction: column;
   align-items: center;
   padding: 15px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 8px;
-  background: #1a1a1a;
+  background: white;
   transition: all 0.2s;
 }
 
 .chord-library__item:hover {
-  border-color: #646cff;
+  border-color: black;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -95,49 +95,49 @@
 
 .chord-library__action {
   padding: 6px 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 4px;
-  background: transparent;
-  color: inherit;
+  background: white;
+  color: black;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .chord-library__action--select {
-  background: #646cff;
-  border-color: #646cff;
+  background: black;
+  border-color: black;
   color: white;
 }
 
 .chord-library__action--select:hover {
-  background: #535bf2;
+  background: #333;
 }
 
 .chord-library__action--edit {
-  border-color: #ffa502;
-  color: #ffa502;
+  border-color: black;
+  color: black;
 }
 
 .chord-library__action--edit:hover {
-  background: #ffa502;
+  background: black;
   color: white;
 }
 
 .chord-library__action--delete {
-  border-color: #ff4757;
-  color: #ff4757;
+  border-color: black;
+  color: black;
 }
 
 .chord-library__action--delete:hover {
-  background: #ff4757;
+  background: black;
   color: white;
 }
 
 .chord-library__empty {
   text-align: center;
   padding: 60px 20px;
-  color: #999;
+  color: black;
 }
 
 .chord-library__empty p {

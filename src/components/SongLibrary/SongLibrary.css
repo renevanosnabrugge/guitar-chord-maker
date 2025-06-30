@@ -9,12 +9,12 @@
   align-items: center;
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid black;
 }
 
 .song-library__header h2 {
   margin: 0;
-  color: #646cff;
+  color: black;
 }
 
 .song-library__controls {
@@ -25,9 +25,9 @@
 
 .song-library__search {
   padding: 8px 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #1a1a1a;
+  background: white;
   color: inherit;
   font-size: 14px;
   width: 200px;
@@ -35,26 +35,26 @@
 
 .song-library__search:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: black;
 }
 
 .song-library__select {
   padding: 8px 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #1a1a1a;
+  background: white;
   color: inherit;
   font-size: 14px;
 }
 
 .song-library__select:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: black;
 }
 
 .song-library__button {
   padding: 8px 16px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
   font-size: 14px;
   font-weight: bold;
@@ -63,8 +63,8 @@
 }
 
 .song-library__button--primary {
-  background: #646cff;
-  border-color: #646cff;
+  background: black;
+  border-color: black;
   color: white;
 }
 
@@ -79,14 +79,14 @@
 }
 
 .song-library__button--secondary:hover {
-  border-color: #646cff;
+  border-color: black;
   background: rgba(100, 108, 255, 0.1);
 }
 
 .song-library__empty {
   text-align: center;
   padding: 60px 20px;
-  color: #999;
+  color: black;
 }
 
 .song-library__empty p {
@@ -101,15 +101,15 @@
 }
 
 .song-library__card {
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 8px;
-  background: #1a1a1a;
+  background: white;
   padding: 20px;
   transition: all 0.2s;
 }
 
 .song-library__card:hover {
-  border-color: #646cff;
+  border-color: black;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -117,18 +117,18 @@
 .song-library__card-header {
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid black;
 }
 
 .song-library__song-name {
   margin: 0 0 5px 0;
-  color: #646cff;
+  color: black;
   font-size: 1.2em;
 }
 
 .song-library__song-artist {
   margin: 0;
-  color: #999;
+  color: black;
   font-style: italic;
 }
 
@@ -141,13 +141,13 @@
 }
 
 .song-library__song-meta {
-  color: #999;
+  color: black;
   font-size: 14px;
   margin-bottom: 5px;
 }
 
 .song-library__song-date {
-  color: #666;
+  color: black;
   font-size: 12px;
 }
 
@@ -166,11 +166,11 @@
 
 .song-library__chord-preview-item span {
   font-size: 10px;
-  color: #999;
+  color: black;
 }
 
 .song-library__chord-more {
-  color: #666;
+  color: black;
   font-size: 12px;
   font-style: italic;
 }
@@ -183,7 +183,7 @@
 
 .song-library__action {
   padding: 6px 12px;
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 4px;
   background: transparent;
   color: inherit;
@@ -195,12 +195,12 @@
 }
 
 .song-library__action--view {
-  border-color: #646cff;
-  color: #646cff;
+  border-color: black;
+  color: black;
 }
 
 .song-library__action--view:hover {
-  background: #646cff;
+  background: black;
   color: white;
 }
 
@@ -246,18 +246,18 @@
   align-items: flex-start;
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid black;
 }
 
 .song-library__viewer-header h2 {
   margin: 0;
-  color: #646cff;
+  color: black;
   font-size: 2em;
 }
 
 .song-library__artist {
   margin: 5px 0 0 0;
-  color: #999;
+  color: black;
   font-style: italic;
   font-size: 1.1em;
 }
@@ -269,15 +269,15 @@
 }
 
 .song-library__metadata {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: white;
+  border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
 }
 
 .song-library__metadata h3 {
   margin: 0 0 15px 0;
-  color: #999;
+  color: black;
 }
 
 .song-library__metadata-grid {
@@ -295,7 +295,7 @@
 
 .song-library__metadata-item label {
   font-weight: bold;
-  color: #999;
+  color: black;
   font-size: 14px;
 }
 
@@ -311,28 +311,28 @@
 
 .song-library__notes label {
   font-weight: bold;
-  color: #999;
+  color: black;
   font-size: 14px;
 }
 
 .song-library__notes p {
   margin: 0;
   padding: 10px;
-  background: #2a2a2a;
+  background: white;
   border-radius: 4px;
   color: inherit;
 }
 
 .song-library__chord-sequence {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: white;
+  border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
 }
 
 .song-library__chord-sequence h3 {
   margin: 0 0 20px 0;
-  color: #999;
+  color: black;
 }
 
 .song-library__chords {
@@ -343,9 +343,9 @@
 }
 
 .song-library__chord-item {
-  border: 1px solid #333;
+  border: 1px solid black;
   border-radius: 6px;
-  background: #2a2a2a;
+  background: white;
   padding: 15px;
 }
 
@@ -354,7 +354,7 @@
   gap: 15px;
   justify-content: center;
   padding-top: 20px;
-  border-top: 1px solid #333;
+  border-top: 1px solid black;
 }
 
 @media (max-width: 768px) {
