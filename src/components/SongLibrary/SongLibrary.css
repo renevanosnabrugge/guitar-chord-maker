@@ -357,6 +357,122 @@
   border-top: 1px solid black;
 }
 
+/* Strumming Patterns in Song Viewer */
+.song-library__strumming-patterns {
+  background: white;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.song-library__strumming-patterns h3 {
+  margin: 0 0 20px 0;
+  color: black;
+  font-size: 18px;
+}
+
+.song-library__patterns {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.song-library__pattern {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+  background: #fafafa;
+}
+
+.song-library__pattern-header {
+  margin-bottom: 10px;
+}
+
+.song-library__pattern-header h4 {
+  margin: 0;
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.song-library__pattern-display {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 40px;
+}
+
+.song-library__pattern-char {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid black;
+}
+
+.song-library__pattern-char--u {
+  background: #e8f5e8;
+  color: #2d7a2d;
+}
+
+.song-library__pattern-char--d {
+  background: #e8f4fd;
+  color: #1e6091;
+}
+
+.song-library__pattern-char--x {
+  background: #f8f8f8;
+  color: #666;
+}
+
+.song-library__pattern-char--- {
+  background: #fff8dc;
+  color: #b8860b;
+  border-style: dashed;
+}
+
+.song-library__pattern-empty {
+  color: #999;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.song-library__pattern-legend {
+  padding: 15px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
+
+.song-library__legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.song-library__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.song-library__legend-item .song-library__pattern-char {
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+}
+
 @media (max-width: 768px) {
   .song-library__header {
     flex-direction: column;
@@ -397,5 +513,31 @@
   
   .song-library__viewer-actions {
     flex-direction: column;
+  }
+  
+  .song-library__patterns {
+    gap: 10px;
+  }
+  
+  .song-library__pattern-display {
+    gap: 4px;
+  }
+  
+  .song-library__pattern-char {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .song-library__legend-items {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .song-library__legend-item .song-library__pattern-char {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
   }
 }

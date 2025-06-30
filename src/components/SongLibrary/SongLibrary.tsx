@@ -155,6 +155,55 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
               </div>
             </div>
 
+            {/* Strumming Patterns Section */}
+            {selectedSong.metadata.strummingPatterns && selectedSong.metadata.strummingPatterns.length > 0 && (
+              <div className="song-library__strumming-patterns">
+                <h3>Strumming Patterns</h3>
+                <div className="song-library__patterns">
+                  {selectedSong.metadata.strummingPatterns.map((pattern) => (
+                    <div key={pattern.id} className="song-library__pattern">
+                      <div className="song-library__pattern-header">
+                        <h4>{pattern.name}</h4>
+                      </div>
+                      <div className="song-library__pattern-display">
+                        {pattern.pattern.split('').map((char, index) => (
+                          <span
+                            key={index}
+                            className={`song-library__pattern-char song-library__pattern-char--${char.toLowerCase()}`}
+                          >
+                            {char}
+                          </span>
+                        ))}
+                        {pattern.pattern === '' && (
+                          <span className="song-library__pattern-empty">No pattern set</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="song-library__pattern-legend">
+                  <div className="song-library__legend-items">
+                    <span className="song-library__legend-item">
+                      <span className="song-library__pattern-char song-library__pattern-char--u">U</span>
+                      Up strum
+                    </span>
+                    <span className="song-library__legend-item">
+                      <span className="song-library__pattern-char song-library__pattern-char--d">D</span>
+                      Down strum
+                    </span>
+                    <span className="song-library__legend-item">
+                      <span className="song-library__pattern-char song-library__pattern-char--x">X</span>
+                      Muted strum
+                    </span>
+                    <span className="song-library__legend-item">
+                      <span className="song-library__pattern-char song-library__pattern-char---">-</span>
+                      Pause/Rest
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="song-library__viewer-actions">
               <button
                 onClick={() => onEditSong(selectedSong)}
@@ -230,6 +279,9 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
                 <div className="song-library__song-info">
                   <div className="song-library__song-meta">
                     <span>{song.chords.length} chords</span>
+                    {song.metadata.strummingPatterns && song.metadata.strummingPatterns.length > 0 && (
+                      <span>• 🎵 Patterns</span>
+                    )}
                     {song.metadata.difficulty && (
                       <span>• {getDifficultyText(song.metadata.difficulty)}</span>
                     )}
