@@ -10,6 +10,11 @@ interface ChordLibraryProps {
   onDeleteChord: (chordId: string) => void
 }
 
+interface ChordCategory {
+  name: string
+  chords: Chord[]
+}
+
 export const ChordLibrary: React.FC<ChordLibraryProps> = ({
   chords,
   onSelectChord,
@@ -28,8 +33,61 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
     return matchesSearch && matchesFilter
   })
 
-  const defaultChords = filteredChords.filter(chord => !chord.isCustom)
   const customChords = filteredChords.filter(chord => chord.isCustom)
+  const defaultChords = filteredChords.filter(chord => !chord.isCustom)
+
+  // Categorize default chords
+  const getChordCategories = (): ChordCategory[] => {
+    const categories: ChordCategory[] = [
+      {
+        name: 'Major Chords',
+        chords: defaultChords.filter(chord => 
+          /^[A-G]$/.test(chord.name) && !chord.name.includes('shape)')
+        )
+      },
+      {
+        name: 'Minor Chords',
+        chords: defaultChords.filter(chord => 
+          chord.name.includes('m') && !chord.name.includes('maj7') && !chord.name.includes('7') && !chord.name.includes('shape)')
+        )
+      },
+      {
+        name: 'Dominant 7th Chords',
+        chords: defaultChords.filter(chord => 
+          chord.name.includes('7') && !chord.name.includes('maj7') && !chord.name.includes('shape)')
+        )
+      },
+      {
+        name: 'Suspended Chords',
+        chords: defaultChords.filter(chord => 
+          chord.name.includes('sus')
+        )
+      },
+      {
+        name: 'Major 7th Chords',
+        chords: defaultChords.filter(chord => 
+          chord.name.includes('maj7')
+        )
+      },
+      {
+        name: 'Power Chords',
+        chords: defaultChords.filter(chord => 
+          chord.name.includes('5') && !chord.name.includes('sus') && !chord.name.includes('shape)')
+        )
+      },
+      {
+        name: 'Barre Chords',
+        chords: defaultChords.filter(chord => 
+          chord.name.includes('shape)')
+        )
+      }
+    ]
+
+    // Filter out empty categories
+    return categories.filter(category => category.chords.length > 0)
+  }
+
+  const chordCategories = getChordCategories()
 
   return (
     <div className="chord-library">
@@ -47,6 +105,7 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as 'all' | 'default' | 'custom')}
             className="chord-library__filter"
+            title="Filter chords by type"
           >
             <option value="all">All Chords</option>
             <option value="default">Default Chords</option>
@@ -55,11 +114,11 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
         </div>
       </div>
 
-      {filterType !== 'custom' && defaultChords.length > 0 && (
-        <div className="chord-library__section">
-          <h3>Default Chords</h3>
+      {filterType !== 'custom' && chordCategories.map(category => (
+        <div key={category.name} className="chord-library__section">
+          <h3>{category.name}</h3>
           <div className="chord-library__grid">
-            {defaultChords.map(chord => (
+            {category.chords.map(chord => (
               <ChordChart 
                 key={chord.id} 
                 chord={chord} 
@@ -68,7 +127,7 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
             ))}
           </div>
         </div>
-      )}
+      ))}
 
       {filterType !== 'default' && customChords.length > 0 && (
         <div className="chord-library__section">

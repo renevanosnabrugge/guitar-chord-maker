@@ -164,6 +164,42 @@
   top: 20px;
 }
 
+.chord-editor__preview-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.chord-editor__preview-header label {
+  font-weight: bold;
+  color: black;
+  font-size: 14px;
+}
+
+.chord-editor__preview-note {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.clickable-chord-chart {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.clickable-area {
+  cursor: pointer;
+}
+
+.clickable-area:hover {
+  fill: rgba(0, 0, 0, 0.1);
+}
+
 .chord-editor__preview h3 {
   margin: 0 0 20px 0;
   color: black;
