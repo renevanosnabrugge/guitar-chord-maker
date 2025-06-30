@@ -227,6 +227,32 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       // This simulates searching for chords online
       await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API delay
 
+      /* 
+       * REAL API INTEGRATION EXAMPLE:
+       * 
+       * const response = await fetch(`/api/chords/search`, {
+       *   method: 'POST',
+       *   headers: { 'Content-Type': 'application/json' },
+       *   body: JSON.stringify({
+       *     title: suggestionTitle,
+       *     artist: suggestionArtist
+       *   })
+       * })
+       * 
+       * if (!response.ok) {
+       *   throw new Error('Failed to fetch chord suggestions')
+       * }
+       * 
+       * const data = await response.json()
+       * setSuggestedChords(data.chords || [])
+       * 
+       * Alternative APIs you could integrate with:
+       * - Ultimate Guitar API
+       * - Songsterr API 
+       * - ChordPro databases
+       * - Custom AI/ML chord prediction services
+       */
+
       // Mock chord suggestions based on common progressions
       const mockChordSuggestions = [
         ['C', 'Am', 'F', 'G'], // I-vi-IV-V progression in C
