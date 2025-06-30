@@ -25,6 +25,19 @@
   border-radius: 4px;
 }
 
+/* Clean variant - no borders or background */
+.chord-chart--clean {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.chord-chart--clean .chord-chart__name {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
 /* Size variants */
 .chord-chart--small {
   padding: 5px;

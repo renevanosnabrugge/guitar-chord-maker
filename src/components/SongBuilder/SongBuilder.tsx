@@ -240,7 +240,7 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
               className="song-builder__chord-item"
               onClick={() => addChord(chord.id)}
             >
-              <ChordChart chord={chord} size="small" showName={false} />
+              <ChordChart chord={chord} size="small" showName={false} variant="clean" />
               <span className="song-builder__chord-name">{chord.name}</span>
             </div>
           ))}

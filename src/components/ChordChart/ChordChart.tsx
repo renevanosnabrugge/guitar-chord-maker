@@ -5,12 +5,14 @@ interface ChordChartProps {
   chord: Chord
   size?: 'small' | 'medium' | 'large'
   showName?: boolean
+  variant?: 'default' | 'clean'
 }
 
 export const ChordChart: React.FC<ChordChartProps> = ({ 
   chord, 
   size = 'medium', 
-  showName = true 
+  showName = true,
+  variant = 'default'
 }) => {
   const stringNames = ['E', 'A', 'D', 'G', 'B', 'E']
   const activeFrets = chord.frets.filter(fret => fret > 0)
@@ -43,11 +45,11 @@ export const ChordChart: React.FC<ChordChartProps> = ({
   const { width, height, cellWidth, cellHeight, fontSize } = sizeSettings[size]
   
   const getSizeClass = () => {
-    switch (size) {
-      case 'small': return 'chord-chart--small'
-      case 'large': return 'chord-chart--large'
-      default: return 'chord-chart--medium'
-    }
+    const sizeClass = size === 'small' ? 'chord-chart--small' 
+                    : size === 'large' ? 'chord-chart--large'
+                    : 'chord-chart--medium'
+    const variantClass = variant === 'clean' ? 'chord-chart--clean' : ''
+    return `${sizeClass} ${variantClass}`.trim()
   }
 
   return (
