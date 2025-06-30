@@ -7,6 +7,12 @@ export interface Chord {
   createdDate: string
 }
 
+export interface StrummingPattern {
+  id: string
+  name: string
+  pattern: string
+}
+
 export interface Song {
   id: string
   name: string
@@ -18,6 +24,7 @@ export interface Song {
     difficulty?: number
     tags?: string[]
     notes?: string
+    strummingPatterns?: StrummingPattern[]
   }
   createdDate: string
   modifiedDate: string

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Chord, Song } from '../../types'
+import { useState, useEffect, useRef } from 'react'
+import { Chord, Song, StrummingPattern } from '../../types'
 import { ChordChart } from '../ChordChart/ChordChart'
 import './SongBuilder.css'
 
@@ -22,6 +22,14 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
   const [artist, setArtist] = useState('')
   const [key, setKey] = useState('')
   const [notes, setNotes] = useState('')
+  
+  // Strumming patterns state
+  const [showStrummingPatterns, setShowStrummingPatterns] = useState(false)
+  const [strummingPatterns, setStrummingPatterns] = useState<StrummingPattern[]>([
+    { id: 'general', name: 'General', pattern: '' }
+  ])
+  const [activePatternId, setActivePatternId] = useState<string | null>(null)
+  const patternInputRef = useRef<HTMLDivElement>(null)
 
   // Load editing song data when component mounts or editingSong changes
   useEffect(() => {
@@ -30,13 +38,24 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       setArtist(editingSong.artist || '')
       setKey(editingSong.metadata?.key || '')
       setNotes(editingSong.metadata?.notes || '')
+      // Load strumming patterns if they exist
+      if (editingSong.metadata?.strummingPatterns) {
+        setStrummingPatterns(editingSong.metadata.strummingPatterns)
+        setShowStrummingPatterns(editingSong.metadata.strummingPatterns.length > 1 || editingSong.metadata.strummingPatterns[0]?.pattern !== '')
+      } else {
+        setStrummingPatterns([{ id: 'general', name: 'General', pattern: '' }])
+        setShowStrummingPatterns(false)
+      }
     } else {
       // Reset form when not editing
       setSongName('')
       setArtist('')
       setKey('')
       setNotes('')
+      setStrummingPatterns([{ id: 'general', name: 'General', pattern: '' }])
+      setShowStrummingPatterns(false)
     }
+    setActivePatternId(null)
   }, [editingSong])
 
   const [searchTerm, setSearchTerm] = useState('')
@@ -106,6 +125,76 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
     setNotes('')
     setSearchTerm('')
     setFilterType('all')
+    setStrummingPatterns([{ id: 'general', name: 'General', pattern: '' }])
+    setShowStrummingPatterns(false)
+    setActivePatternId(null)
+  }
+
+  // Strumming pattern functions
+  const addStrummingPattern = () => {
+    const newId = `pattern-${Date.now()}`
+    const newPattern: StrummingPattern = {
+      id: newId,
+      name: `Pattern ${strummingPatterns.length + 1}`,
+      pattern: ''
+    }
+    setStrummingPatterns([...strummingPatterns, newPattern])
+  }
+
+  const updatePatternName = (id: string, name: string) => {
+    setStrummingPatterns(patterns => 
+      patterns.map(p => p.id === id ? { ...p, name } : p)
+    )
+  }
+
+  const updatePatternContent = (id: string, pattern: string) => {
+    setStrummingPatterns(patterns => 
+      patterns.map(p => p.id === id ? { ...p, pattern } : p)
+    )
+  }
+
+  const removeStrummingPattern = (id: string) => {
+    if (strummingPatterns.length > 1) {
+      setStrummingPatterns(patterns => patterns.filter(p => p.id !== id))
+      if (activePatternId === id) {
+        setActivePatternId(null)
+      }
+    }
+  }
+
+  const handlePatternKeyDown = (e: React.KeyboardEvent, patternId: string) => {
+    e.preventDefault()
+    const pattern = strummingPatterns.find(p => p.id === patternId)
+    if (!pattern) return
+
+    let newChar = ''
+    switch (e.key) {
+      case 'ArrowUp':
+        newChar = 'U'
+        break
+      case 'ArrowDown':
+        newChar = 'D'
+        break
+      case 'x':
+      case 'X':
+        newChar = 'X'
+        break
+      case ' ':
+        newChar = '-'
+        break
+      case 'Backspace':
+        updatePatternContent(patternId, pattern.pattern.slice(0, -1))
+        return
+      case 'Delete':
+        updatePatternContent(patternId, '')
+        return
+      default:
+        return
+    }
+
+    if (newChar) {
+      updatePatternContent(patternId, pattern.pattern + newChar)
+    }
   }
 
   const handleSave = () => {
@@ -126,7 +215,8 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       chords: selectedChords,
       metadata: {
         key: key.trim() || undefined,
-        notes: notes.trim() || undefined
+        notes: notes.trim() || undefined,
+        strummingPatterns: strummingPatterns.filter(p => p.pattern.trim() !== '' || p.name !== 'General')
       },
       createdDate: editingSong ? editingSong.createdDate : new Date().toISOString().split('T')[0],
       modifiedDate: new Date().toISOString().split('T')[0]
@@ -175,7 +265,15 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
 
       {/* Chord Sequence - Full Width */}
       <div className="song-builder__sequence">
-        <h3>Chord Sequence</h3>
+        <div className="song-builder__sequence-header">
+          <h3>Chord Sequence</h3>
+          <button
+            onClick={() => setShowStrummingPatterns(!showStrummingPatterns)}
+            className={`song-builder__toggle-button ${showStrummingPatterns ? 'song-builder__toggle-button--active' : ''}`}
+          >
+            {showStrummingPatterns ? 'Hide' : 'Show'} Strumming Patterns
+          </button>
+        </div>
         {selectedChords.length === 0 ? (
           <div className="song-builder__empty">
             <p>Click on chords below to add them to your song</p>
@@ -224,6 +322,99 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
           </div>
         )}
       </div>
+
+      {/* Strumming Patterns Section */}
+      {showStrummingPatterns && (
+        <div className="song-builder__strumming">
+          <div className="song-builder__strumming-header">
+            <h3>Strumming Patterns</h3>
+            <button
+              onClick={addStrummingPattern}
+              className="song-builder__add-pattern-button"
+            >
+              Add Pattern
+            </button>
+          </div>
+          
+          <div className="song-builder__patterns">
+            {strummingPatterns.map(pattern => (
+              <div key={pattern.id} className="song-builder__pattern">
+                <div className="song-builder__pattern-header">
+                  <input
+                    type="text"
+                    value={pattern.name}
+                    onChange={(e) => updatePatternName(pattern.id, e.target.value)}
+                    className="song-builder__pattern-name"
+                    placeholder="Pattern name"
+                  />
+                  {strummingPatterns.length > 1 && (
+                    <button
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to delete the pattern "${pattern.name}"?`)) {
+                          removeStrummingPattern(pattern.id)
+                        }
+                      }}
+                      className="song-builder__remove-pattern-button"
+                      title="Delete pattern"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+                
+                <div
+                  className={`song-builder__pattern-input ${activePatternId === pattern.id ? 'song-builder__pattern-input--active' : ''}`}
+                  tabIndex={0}
+                  onKeyDown={(e) => handlePatternKeyDown(e, pattern.id)}
+                  onFocus={() => setActivePatternId(pattern.id)}
+                  onBlur={() => setActivePatternId(null)}
+                >
+                  {pattern.pattern || (
+                    <span className="song-builder__pattern-placeholder">
+                      Use arrow keys and X for pattern...
+                    </span>
+                  )}
+                </div>
+                
+                <div className="song-builder__pattern-display">
+                  {pattern.pattern.split('').map((char, index) => (
+                    <span
+                      key={index}
+                      className={`song-builder__pattern-char song-builder__pattern-char--${char.toLowerCase()}`}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="song-builder__pattern-legend">
+            <h4>Pattern Legend:</h4>
+            <div className="song-builder__legend-items">
+              <span className="song-builder__legend-item">
+                <kbd>↑</kbd> = U (Up strum)
+              </span>
+              <span className="song-builder__legend-item">
+                <kbd>↓</kbd> = D (Down strum)
+              </span>
+              <span className="song-builder__legend-item">
+                <kbd>X</kbd> = X (Muted strum)
+              </span>
+              <span className="song-builder__legend-item">
+                <kbd>Space</kbd> = - (Pause/Rest)
+              </span>
+              <span className="song-builder__legend-item">
+                <kbd>Backspace</kbd> = Remove last
+              </span>
+              <span className="song-builder__legend-item">
+                <kbd>Delete</kbd> = Clear all
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Chord Selection - Full Width */}
       <div className="song-builder__chord-picker">
