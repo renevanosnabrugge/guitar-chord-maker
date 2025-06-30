@@ -60,17 +60,11 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
           <h3>Default Chords</h3>
           <div className="chord-library__grid">
             {defaultChords.map(chord => (
-              <div key={chord.id} className="chord-library__item">
-                <ChordChart chord={chord} size="small" />
-                <div className="chord-library__actions">
-                  <button
-                    onClick={() => onSelectChord(chord.id)}
-                    className="chord-library__action chord-library__action--select"
-                  >
-                    Add to Song
-                  </button>
-                </div>
-              </div>
+              <ChordChart 
+                key={chord.id} 
+                chord={chord} 
+                size="small" 
+              />
             ))}
           </div>
         </div>
@@ -81,15 +75,9 @@ export const ChordLibrary: React.FC<ChordLibraryProps> = ({
           <h3>Custom Chords</h3>
           <div className="chord-library__grid">
             {customChords.map(chord => (
-              <div key={chord.id} className="chord-library__item">
+              <div key={chord.id} className="chord-library__custom-item">
                 <ChordChart chord={chord} size="small" />
                 <div className="chord-library__actions">
-                  <button
-                    onClick={() => onSelectChord(chord.id)}
-                    className="chord-library__action chord-library__action--select"
-                  >
-                    Add to Song
-                  </button>
                   <button
                     onClick={() => onEditChord(chord)}
                     className="chord-library__action chord-library__action--edit"

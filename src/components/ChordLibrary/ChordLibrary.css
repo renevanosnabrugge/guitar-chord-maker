@@ -145,6 +145,24 @@
   font-size: 1.1em;
 }
 
+/* Custom chord items that need actions (edit/delete) */
+.chord-library__custom-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid black;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.2s;
+}
+
+.chord-library__custom-item:hover {
+  border-color: black;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 @media (max-width: 768px) {
   .chord-library__header {
     flex-direction: column;
