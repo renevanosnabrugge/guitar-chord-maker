@@ -1,0 +1,275 @@
+.song-builder {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.song-builder__header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.song-builder__header h2 {
+  margin: 0;
+  color: #646cff;
+}
+
+.song-builder__content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+}
+
+.song-builder__sidebar {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.song-builder__chord-picker h3 {
+  margin: 0 0 20px 0;
+  color: #999;
+}
+
+.song-builder__chord-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.song-builder__chord-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #2a2a2a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.song-builder__chord-item:hover {
+  border-color: #646cff;
+  transform: translateY(-1px);
+}
+
+.song-builder__chord-name {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #999;
+  font-weight: bold;
+}
+
+.song-builder__main {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.song-builder__metadata {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.song-builder__metadata h3 {
+  margin: 0 0 20px 0;
+  color: #999;
+}
+
+.song-builder__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.song-builder__form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.song-builder__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.song-builder__form-group label {
+  font-weight: bold;
+  color: #999;
+  font-size: 14px;
+}
+
+.song-builder__input,
+.song-builder__select,
+.song-builder__textarea {
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: inherit;
+  font-size: 14px;
+}
+
+.song-builder__input:focus,
+.song-builder__select:focus,
+.song-builder__textarea:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.song-builder__textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.song-builder__sequence {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.song-builder__sequence h3 {
+  margin: 0 0 20px 0;
+  color: #999;
+}
+
+.song-builder__empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  border: 2px dashed #333;
+  border-radius: 8px;
+}
+
+.song-builder__chord-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.song-builder__sequence-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.song-builder__sequence-chord {
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #2a2a2a;
+  padding: 10px;
+}
+
+.song-builder__sequence-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.song-builder__sequence-button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song-builder__sequence-button:hover {
+  border-color: #646cff;
+  background: rgba(100, 108, 255, 0.1);
+}
+
+.song-builder__sequence-button--delete {
+  border-color: #ff4757;
+  color: #ff4757;
+}
+
+.song-builder__sequence-button--delete:hover {
+  background: #ff4757;
+  color: white;
+}
+
+.song-builder__actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.song-builder__button {
+  padding: 12px 24px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.song-builder__button--primary {
+  background: #646cff;
+  border-color: #646cff;
+  color: white;
+}
+
+.song-builder__button--primary:hover {
+  background: #535bf2;
+  border-color: #535bf2;
+}
+
+.song-builder__button--secondary {
+  background: transparent;
+  color: inherit;
+}
+
+.song-builder__button--secondary:hover {
+  border-color: #646cff;
+  background: rgba(100, 108, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .song-builder__content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .song-builder__sidebar {
+    position: static;
+  }
+  
+  .song-builder__chord-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-height: 300px;
+  }
+  
+  .song-builder__form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .song-builder__chord-sequence {
+    justify-content: center;
+  }
+  
+  .song-builder__actions {
+    flex-direction: column;
+  }
+}

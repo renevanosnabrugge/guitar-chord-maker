@@ -1,0 +1,199 @@
+.chord-editor {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chord-editor__header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.chord-editor__header h2 {
+  margin: 0;
+  color: #646cff;
+}
+
+.chord-editor__content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 40px;
+}
+
+.chord-editor__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.chord-editor__name-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chord-editor__name-input label {
+  font-weight: bold;
+  color: #999;
+}
+
+.chord-editor__input {
+  padding: 12px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: inherit;
+  font-size: 16px;
+}
+
+.chord-editor__input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.chord-editor__fretboard h3 {
+  margin: 0 0 20px 0;
+  color: #999;
+}
+
+.chord-editor__strings {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chord-editor__string {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #1a1a1a;
+}
+
+.chord-editor__string-header {
+  min-width: 40px;
+}
+
+.chord-editor__string-name {
+  font-weight: bold;
+  color: #646cff;
+  font-size: 18px;
+}
+
+.chord-editor__fret-controls,
+.chord-editor__finger-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 100px;
+}
+
+.chord-editor__fret-controls label,
+.chord-editor__finger-controls label {
+  font-size: 12px;
+  color: #999;
+  font-weight: bold;
+}
+
+.chord-editor__select {
+  padding: 6px 8px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: inherit;
+  font-size: 14px;
+}
+
+.chord-editor__select:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.chord-editor__actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.chord-editor__button {
+  padding: 12px 24px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chord-editor__button--primary {
+  background: #646cff;
+  border-color: #646cff;
+  color: white;
+}
+
+.chord-editor__button--primary:hover {
+  background: #535bf2;
+  border-color: #535bf2;
+}
+
+.chord-editor__button--secondary {
+  background: transparent;
+  color: inherit;
+}
+
+.chord-editor__button--secondary:hover {
+  border-color: #646cff;
+  background: rgba(100, 108, 255, 0.1);
+}
+
+.chord-editor__preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.chord-editor__preview h3 {
+  margin: 0 0 20px 0;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .chord-editor__content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .chord-editor__string {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .chord-editor__string-header {
+    text-align: center;
+  }
+  
+  .chord-editor__fret-controls,
+  .chord-editor__finger-controls {
+    min-width: auto;
+  }
+  
+  .chord-editor__actions {
+    flex-direction: column;
+  }
+  
+  .chord-editor__preview {
+    position: static;
+  }
+}

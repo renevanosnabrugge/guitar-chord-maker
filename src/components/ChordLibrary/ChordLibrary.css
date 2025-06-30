@@ -1,0 +1,168 @@
+.chord-library {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chord-library__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.chord-library__header h2 {
+  margin: 0;
+  color: #646cff;
+}
+
+.chord-library__controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.chord-library__search {
+  padding: 8px 12px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: inherit;
+  font-size: 14px;
+  width: 200px;
+}
+
+.chord-library__search:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.chord-library__filter {
+  padding: 8px 12px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: inherit;
+  font-size: 14px;
+}
+
+.chord-library__filter:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.chord-library__section {
+  margin-bottom: 40px;
+}
+
+.chord-library__section h3 {
+  margin: 0 0 20px 0;
+  color: #999;
+  font-size: 1.2em;
+}
+
+.chord-library__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.chord-library__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+  transition: all 0.2s;
+}
+
+.chord-library__item:hover {
+  border-color: #646cff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.chord-library__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.chord-library__action {
+  padding: 6px 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chord-library__action--select {
+  background: #646cff;
+  border-color: #646cff;
+  color: white;
+}
+
+.chord-library__action--select:hover {
+  background: #535bf2;
+}
+
+.chord-library__action--edit {
+  border-color: #ffa502;
+  color: #ffa502;
+}
+
+.chord-library__action--edit:hover {
+  background: #ffa502;
+  color: white;
+}
+
+.chord-library__action--delete {
+  border-color: #ff4757;
+  color: #ff4757;
+}
+
+.chord-library__action--delete:hover {
+  background: #ff4757;
+  color: white;
+}
+
+.chord-library__empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.chord-library__empty p {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .chord-library__header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  
+  .chord-library__controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .chord-library__search {
+    width: 100%;
+  }
+  
+  .chord-library__grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  }
+}

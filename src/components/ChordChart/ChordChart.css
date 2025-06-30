@@ -1,0 +1,45 @@
+.chord-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: white;
+}
+
+.chord-chart__name {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: black;
+}
+
+.chord-chart__diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chord-chart__svg {
+  border-radius: 4px;
+}
+
+/* Size variants */
+.chord-chart--small {
+  padding: 5px;
+}
+
+.chord-chart--small .chord-chart__name {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.chord-chart--large {
+  padding: 15px;
+}
+
+.chord-chart--large .chord-chart__name {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}

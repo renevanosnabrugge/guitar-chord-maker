@@ -1,0 +1,139 @@
+import { useState } from 'react'
+import { ChordLibrary } from './components/ChordLibrary/ChordLibrary'
+import { ChordEditor } from './components/ChordEditor/ChordEditor'
+import { SongBuilder } from './components/SongBuilder/SongBuilder'
+import { SongLibrary } from './components/SongLibrary/SongLibrary'
+import { Chord, Song } from './types'
+import { defaultChords } from './data/defaultChords'
+import './App.css'
+
+type ViewMode = 'chord-library' | 'chord-editor' | 'song-builder' | 'song-library'
+
+function App() {
+  const [currentView, setCurrentView] = useState<ViewMode>('chord-library')
+  const [customChords, setCustomChords] = useState<Chord[]>([])
+  const [songs, setSongs] = useState<Song[]>([])
+  const [selectedChords, setSelectedChords] = useState<string[]>([])
+  const [editingChord, setEditingChord] = useState<Chord | null>(null)
+
+  const allChords = [...defaultChords, ...customChords]
+
+  const handleSaveChord = (chord: Chord) => {
+    if (editingChord) {
+      setCustomChords(prev => prev.map(c => c.id === chord.id ? chord : c))
+    } else {
+      setCustomChords(prev => [...prev, chord])
+    }
+    setEditingChord(null)
+    setCurrentView('chord-library')
+  }
+
+  const handleEditChord = (chord: Chord) => {
+    setEditingChord(chord)
+    setCurrentView('chord-editor')
+  }
+
+  const handleDeleteChord = (chordId: string) => {
+    setCustomChords(prev => prev.filter(c => c.id !== chordId))
+  }
+
+  const handleSaveSong = (song: Song) => {
+    setSongs(prev => [...prev, song])
+    setSelectedChords([])
+    setCurrentView('song-library')
+  }
+
+  const handleDeleteSong = (songId: string) => {
+    setSongs(prev => prev.filter(s => s.id !== songId))
+  }
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'chord-library':
+        return (
+          <ChordLibrary
+            chords={allChords}
+            onSelectChord={(chordId) => setSelectedChords(prev => [...prev, chordId])}
+            onEditChord={handleEditChord}
+            onDeleteChord={handleDeleteChord}
+          />
+        )
+      case 'chord-editor':
+        return (
+          <ChordEditor
+            chord={editingChord}
+            onSave={handleSaveChord}
+            onCancel={() => {
+              setEditingChord(null)
+              setCurrentView('chord-library')
+            }}
+          />
+        )
+      case 'song-builder':
+        return (
+          <SongBuilder
+            chords={allChords}
+            selectedChords={selectedChords}
+            onUpdateChords={setSelectedChords}
+            onSaveSong={handleSaveSong}
+          />
+        )
+      case 'song-library':
+        return (
+          <SongLibrary
+            songs={songs}
+            chords={allChords}
+            onDeleteSong={handleDeleteSong}
+            onEditSong={(song) => {
+              setSelectedChords(song.chords)
+              setCurrentView('song-builder')
+            }}
+          />
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="app">
+      <nav className="nav">
+        <h1>Guitar Chord Maker</h1>
+        <div className="nav-buttons">
+          <button
+            className={currentView === 'chord-library' ? 'active' : ''}
+            onClick={() => setCurrentView('chord-library')}
+          >
+            Chord Library
+          </button>
+          <button
+            className={currentView === 'chord-editor' ? 'active' : ''}
+            onClick={() => {
+              setEditingChord(null)
+              setCurrentView('chord-editor')
+            }}
+          >
+            Create Chord
+          </button>
+          <button
+            className={currentView === 'song-builder' ? 'active' : ''}
+            onClick={() => setCurrentView('song-builder')}
+          >
+            Build Song
+          </button>
+          <button
+            className={currentView === 'song-library' ? 'active' : ''}
+            onClick={() => setCurrentView('song-library')}
+          >
+            Song Library
+          </button>
+        </div>
+      </nav>
+      <main className="main">
+        {renderCurrentView()}
+      </main>
+    </div>
+  )
+}
+
+export default App
