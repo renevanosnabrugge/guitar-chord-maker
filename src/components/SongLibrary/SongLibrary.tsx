@@ -243,21 +243,20 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
                 </div>
 
                 <div className="song-library__chord-preview">
-                  {song.chords.slice(0, 4).map((chordId, index) => {
+                  {song.chords.slice(0, 6).map((chordId, index) => {
                     const chord = getChordById(chordId)
                     if (!chord) return null
                     
                     return (
-                      <div key={index} className="song-library__chord-preview-item">
-                        <ChordChart chord={chord} size="tiny" showName={false} variant="clean" />
-                        <span>{chord.name}</span>
-                      </div>
+                      <span key={index} className="song-library__chord-name">
+                        {chord.name}
+                      </span>
                     )
                   })}
-                  {song.chords.length > 4 && (
-                    <div className="song-library__chord-more">
-                      +{song.chords.length - 4} more
-                    </div>
+                  {song.chords.length > 6 && (
+                    <span className="song-library__chord-more">
+                      +{song.chords.length - 6} more
+                    </span>
                   )}
                 </div>
               </div>
