@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { ChordLibrary } from './components/ChordLibrary/ChordLibrary'
 import { ChordEditor } from './components/ChordEditor/ChordEditor'
 import { SongBuilder } from './components/SongBuilder/SongBuilder'
@@ -8,6 +8,7 @@ import { Chord, Song } from './types'
 import { defaultChords } from './data/defaultChords'
 import { useSongsStore } from './stores/songsStore'
 import { useChordsStore } from './stores/chordsStore'
+import { blobStorageClient } from './services/blobStorageClient'
 import { initializeFromCloud } from './utils/syncUtils'
 import { exportAllData } from './utils/storage'
 import './App.css'
@@ -35,10 +36,12 @@ function App() {
   useEffect(() => {
     const initialize = async () => {
       try {
+        console.log('🚀 App starting initialization from cloud...')
         await initializeFromCloud()
+        console.log('🚀 App initialization completed successfully')
         setIsInitialized(true)
       } catch (error) {
-        console.error('Failed to initialize from cloud:', error)
+        console.error('🚀 Failed to initialize from cloud:', error)
         setIsInitialized(true) // Still show the app even if cloud sync fails
       }
     }
@@ -47,10 +50,44 @@ function App() {
   }, [])
 
   // Convert custom chords object to array and combine with default chords
-  const allChords = [
+  const allChords = useMemo(() => [
     ...defaultChords,
     ...Object.values(customChords)
-  ]
+  ], [customChords])
+
+  // Debug logging for custom chords
+  useEffect(() => {
+    console.log('🎯 App: Custom chords updated:', Object.keys(customChords).length, 'chords')
+    console.log('🎯 App: Total chords available:', allChords.length)
+    
+    // Make debugging functions available in the browser console
+    if (typeof window !== 'undefined') {
+      (window as unknown as { debugChords: unknown }).debugChords = {
+        customChords,
+        allChords,
+        saveTestChord: async () => {
+          const testChord: Chord = {
+            id: 'test-chord',
+            name: 'Test Chord',
+            frets: [0, 2, 2, 1, 0, 0],
+            fingers: [0, 2, 3, 1, 0, 0],
+            isCustom: true,
+            createdDate: new Date().toISOString()
+          }
+          await saveCustomChord(testChord)
+          console.log('✅ Test chord saved!')
+        },
+        reloadChords: async () => {
+          await useChordsStore.getState().loadCustomChords()
+          console.log('✅ Custom chords reloaded!')
+        },
+        initializeCustomChordsFile: async () => {
+          await blobStorageClient.initializeCustomChordsFile()
+          console.log('✅ Custom chords file initialized!')
+        }
+      }
+    }
+  }, [customChords, allChords, saveCustomChord])
 
   const handleSaveChord = async (chord: Chord) => {
     try {

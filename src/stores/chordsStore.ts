@@ -54,13 +54,17 @@ export const useChordsStore = create<ChordsStore>((set, get) => ({
     const { setSyncStatus } = get()
     
     try {
+      console.log('🎯 Starting to load custom chords from Azure...')
       setSyncStatus({ isLoading: true, error: undefined })
       
       const chordsData = await blobStorageClient.downloadCustomChords()
+      console.log('🎯 Raw chords data from Azure:', chordsData)
       
       if (chordsData) {
         // Convert the chords data to our local format
         const customChords: Record<string, Chord> = {}
+        
+        console.log('🎯 Converting chords data. Found chords:', Object.keys(chordsData.chords))
         
         Object.entries(chordsData.chords).forEach(([name, chordDef]) => {
           customChords[name] = {
@@ -72,15 +76,27 @@ export const useChordsStore = create<ChordsStore>((set, get) => ({
           }
         })
         
+        console.log('🎯 Converted custom chords:', Object.keys(customChords))
+        
         set({ customChords })
         setSyncStatus({ 
           isLoading: false, 
           lastSync: new Date().toISOString() 
         })
         
-        console.log(`Loaded ${Object.keys(customChords).length} custom chords from Azure`)
+        console.log(`🎯 Loaded ${Object.keys(customChords).length} custom chords from Azure`)
       } else {
-        // No custom chords file exists yet
+        // No custom chords file exists yet - initialize it
+        console.log('🎯 No custom chords file found, initializing...')
+        
+        try {
+          await blobStorageClient.initializeCustomChordsFile()
+          console.log('🎯 Custom chords file initialized successfully')
+        } catch (initError) {
+          console.warn('🎯 Failed to initialize custom chords file:', initError)
+          // Continue anyway, file will be created when first chord is saved
+        }
+        
         set({ customChords: {} })
         setSyncStatus({ 
           isLoading: false, 

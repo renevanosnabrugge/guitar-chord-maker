@@ -6,6 +6,8 @@ export class BlobStorageClient {
 
   constructor() {
     this.sasUrl = import.meta.env.VITE_AZURE_SAS_URL || ''
+    console.log('🔧 Azure SAS URL configured:', this.sasUrl ? 'Yes' : 'No')
+    
     if (!this.sasUrl) {
       throw new Error('VITE_AZURE_SAS_URL environment variable is required')
     }
@@ -13,6 +15,7 @@ export class BlobStorageClient {
     // Extract base URL without SAS parameters
     const url = new URL(this.sasUrl)
     this.baseUrl = `${url.protocol}//${url.host}${url.pathname}`
+    console.log('🔧 Azure base URL:', this.baseUrl)
   }
 
   /**
@@ -67,6 +70,10 @@ export class BlobStorageClient {
       const jsonData = await response.json()
       return jsonData as T
     } catch (error) {
+      // Handle CORS errors which can occur when blob doesn't exist
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        throw new Error(`CORS or network error accessing blob: ${filename}`)
+      }
       console.error(`Error downloading blob ${filename}:`, error)
       throw error
     }
@@ -192,21 +199,51 @@ export class BlobStorageClient {
   }
 
   /**
+   * Initialize custom chords file if it doesn't exist
+   */
+  async initializeCustomChordsFile(): Promise<void> {
+    try {
+      console.log('🔧 Initializing custom chords file...')
+      const emptyChords: CustomChordsData = {
+        chords: {},
+        metadata: {
+          updatedAt: new Date().toISOString(),
+          version: 1
+        }
+      }
+      
+      await this.uploadBlob('custom-chords.json', emptyChords)
+      console.log('🔧 Custom chords file initialized successfully')
+    } catch (error) {
+      console.error('🔧 Failed to initialize custom chords file:', error)
+      throw error
+    }
+  }
+
+  /**
    * Download custom chords file
    */
   async downloadCustomChords(): Promise<CustomChordsData | null> {
     try {
-      const exists = await this.blobExists('custom-chords.json')
-      if (!exists) {
-        return null
-      }
+      console.log('🔍 Attempting to download custom-chords.json directly...')
       
-      return await this.downloadBlob<CustomChordsData>('custom-chords.json')
+      // Try to download directly instead of checking existence first
+      // This avoids CORS issues with HEAD requests on non-existent files
+      const data = await this.downloadBlob<CustomChordsData>('custom-chords.json')
+      console.log('🔍 Downloaded custom chords data:', data)
+      return data
     } catch (error) {
-      if (error instanceof Error && error.message.includes('not found')) {
-        return null
+      if (error instanceof Error) {
+        // Check for various "not found" scenarios
+        if (error.message.includes('not found') || 
+            error.message.includes('404') ||
+            error.message.includes('BlobNotFound') ||
+            error.message.includes('CORS')) {
+          console.log('🔍 Custom chords file not found (will be created when first chord is saved)')
+          return null
+        }
       }
-      console.error('Error downloading custom chords:', error)
+      console.error('🔍 Error downloading custom chords:', error)
       throw error
     }
   }
