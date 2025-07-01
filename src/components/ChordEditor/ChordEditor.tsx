@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Chord } from '../../types'
-import { ChordChart } from '../ChordChart/ChordChart'
 import './ChordEditor.css'
 
 interface ChordEditorProps {
   chord?: Chord | null
-  onSave: (chord: Chord) => void
+  onSave: (_chord: Chord) => void
   onCancel: () => void
 }
 
 interface ClickableChordChartProps {
   chord: Chord
-  onFretClick: (stringIndex: number, fret: number) => void
+  onFretClick: (_stringIndex: number, _fret: number) => void
   startingFret: number
 }
 

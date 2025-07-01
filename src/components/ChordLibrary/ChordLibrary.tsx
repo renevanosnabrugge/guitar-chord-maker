@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Chord } from '../../types'
 import { ChordChart } from '../ChordChart/ChordChart'
 import './ChordLibrary.css'
 
 interface ChordLibraryProps {
   chords: Chord[]
-  onSelectChord: (chordId: string) => void
-  onEditChord: (chord: Chord) => void
-  onDeleteChord: (chordId: string) => void
+  onSelectChord: (_chordId: string) => void
+  onEditChord: (_chord: Chord) => void
+  onDeleteChord: (_chordId: string) => void
 }
 
 interface ChordCategory {
@@ -17,7 +17,7 @@ interface ChordCategory {
 
 export const ChordLibrary: React.FC<ChordLibraryProps> = ({
   chords,
-  onSelectChord,
+  onSelectChord: _onSelectChord,
   onEditChord,
   onDeleteChord
 }) => {
