@@ -38,6 +38,8 @@ jobs:
         run: npm ci
         
       - name: Build project
+        env:
+          VITE_AZURE_SAS_URL: ${{ secrets.AZURE_SAS_URL }}
         run: npm run build
         
       - name: Setup Pages
