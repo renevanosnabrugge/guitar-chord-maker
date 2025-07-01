@@ -26,6 +26,15 @@ A modern web application for creating, managing, and organizing guitar chords an
 - **Import/Export**: Save songs as JSON files for backup and sharing
 - **CRUD Operations**: Create, read, update, and delete songs and chords
 
+### ☁️ Cloud Sync (Azure Integration)
+- **Cross-Device Sync**: Access your chords and songs from any device
+- **Automatic Backup**: Data is automatically saved to Azure Blob Storage
+- **Real-time Status**: View sync status and handle conflicts
+- **Offline Support**: Works offline with localStorage fallback
+- **Secure Storage**: Uses Azure SAS tokens for secure data access
+
+**Note**: Cloud sync requires Azure Blob Storage configuration. See [Azure Storage Integration Guide](./AZURE_STORAGE_INTEGRATION.md) for setup instructions.
+
 ## Getting Started
 
 ### Prerequisites

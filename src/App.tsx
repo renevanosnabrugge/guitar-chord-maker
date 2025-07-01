@@ -3,51 +3,64 @@ import { ChordLibrary } from './components/ChordLibrary/ChordLibrary'
 import { ChordEditor } from './components/ChordEditor/ChordEditor'
 import { SongBuilder } from './components/SongBuilder/SongBuilder'
 import { SongLibrary } from './components/SongLibrary/SongLibrary'
+import { StorageStatus } from './components/StorageStatus'
 import { Chord, Song } from './types'
 import { defaultChords } from './data/defaultChords'
-import {
-  loadCustomChords,
-  addCustomChord,
-  updateCustomChord,
-  deleteCustomChord,
-  loadSongs,
-  addSong,
-  updateSong,
-  deleteSong,
-  exportAllData
-} from './utils/storage'
+import { useSongsStore } from './stores/songsStore'
+import { useChordsStore } from './stores/chordsStore'
+import { initializeFromCloud } from './utils/syncUtils'
+import { exportAllData } from './utils/storage'
 import './App.css'
 
 type ViewMode = 'chord-library' | 'chord-editor' | 'song-builder' | 'song-library'
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewMode>('chord-library')
-  const [customChords, setCustomChords] = useState<Chord[]>([])
-  const [songs, setSongs] = useState<Song[]>([])
   const [selectedChords, setSelectedChords] = useState<string[]>([])
   const [editingChord, setEditingChord] = useState<Chord | null>(null)
   const [editingSong, setEditingSong] = useState<Song | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  // Load data from storage on app start
+  // Zustand store hooks
+  const songs = useSongsStore(state => state.songs)
+  const createSong = useSongsStore(state => state.createSong)
+  const updateSong = useSongsStore(state => state.updateSong)
+  const deleteSong = useSongsStore(state => state.deleteSong)
+
+  const customChords = useChordsStore(state => state.customChords)
+  const saveCustomChord = useChordsStore(state => state.saveCustomChord)
+  const deleteCustomChord = useChordsStore(state => state.deleteCustomChord)
+
+  // Initialize data from Azure on app start
   useEffect(() => {
-    const storedChords = loadCustomChords()
-    const storedSongs = loadSongs()
-    setCustomChords(storedChords)
-    setSongs(storedSongs)
+    const initialize = async () => {
+      try {
+        await initializeFromCloud()
+        setIsInitialized(true)
+      } catch (error) {
+        console.error('Failed to initialize from cloud:', error)
+        setIsInitialized(true) // Still show the app even if cloud sync fails
+      }
+    }
+
+    initialize()
   }, [])
 
-  const allChords = [...defaultChords, ...customChords]
+  // Convert custom chords object to array and combine with default chords
+  const allChords = [
+    ...defaultChords,
+    ...Object.values(customChords)
+  ]
 
-  const handleSaveChord = (chord: Chord) => {
-    if (editingChord) {
-      const updatedChords = updateCustomChord(chord)
-      setCustomChords(updatedChords)
-    } else {
-      const updatedChords = addCustomChord(chord)
-      setCustomChords(updatedChords)
+  const handleSaveChord = async (chord: Chord) => {
+    try {
+      await saveCustomChord(chord)
+      setEditingChord(null)
+      setCurrentView('chord-library')
+    } catch (error) {
+      console.error('Failed to save chord:', error)
+      // Could show a toast notification here
     }
-    setEditingChord(null)
-    setCurrentView('chord-library')
   }
 
   const handleEditChord = (chord: Chord) => {
@@ -55,36 +68,59 @@ function App() {
     setCurrentView('chord-editor')
   }
 
-  const handleDeleteChord = (chordId: string) => {
-    const updatedChords = deleteCustomChord(chordId)
-    setCustomChords(updatedChords)
-  }
-
-  const handleSaveSong = (song: Song) => {
-    if (editingSong) {
-      const updatedSongs = updateSong(song)
-      setSongs(updatedSongs)
-    } else {
-      const updatedSongs = addSong(song)
-      setSongs(updatedSongs)
+  const handleDeleteChord = async (chordId: string) => {
+    try {
+      // Find the chord name from the id
+      const chord = Object.values(customChords).find(c => c.id === chordId)
+      if (chord) {
+        await deleteCustomChord(chord.name)
+      }
+    } catch (error) {
+      console.error('Failed to delete chord:', error)
     }
-    setEditingSong(null)
-    setSelectedChords([])
-    setCurrentView('song-library')
   }
 
-  const handleDeleteSong = (songId: string) => {
-    const updatedSongs = deleteSong(songId)
-    setSongs(updatedSongs)
+  const handleSaveSong = async (songData: Omit<Song, 'id' | 'metadata'>) => {
+    try {
+      if (editingSong) {
+        await updateSong(editingSong.id, songData)
+      } else {
+        await createSong(songData)
+      }
+      setEditingSong(null)
+      setSelectedChords([])
+      setCurrentView('song-library')
+    } catch (error) {
+      console.error('Failed to save song:', error)
+    }
+  }
+
+  const handleDeleteSong = async (songId: string) => {
+    try {
+      await deleteSong(songId)
+    } catch (error) {
+      console.error('Failed to delete song:', error)
+    }
   }
 
   const handleEditSong = (song: Song) => {
     setEditingSong(song)
-    setSelectedChords(song.chords)
+    // Handle both old and new song formats
+    const chords = song.chords || []
+    setSelectedChords(chords)
     setCurrentView('song-builder')
   }
 
   const renderCurrentView = () => {
+    if (!isInitialized) {
+      return (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading ChordMaker...</p>
+        </div>
+      )
+    }
+
     switch (currentView) {
       case 'chord-library':
         return (
@@ -175,6 +211,10 @@ function App() {
           </button>
         </div>
       </nav>
+      
+      {/* Azure Storage Status */}
+      <StorageStatus />
+      
       <main className="main">
         {renderCurrentView()}
       </main>

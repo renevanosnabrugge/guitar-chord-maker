@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Song, Chord } from '../../types'
 import { ChordChart } from '../ChordChart/ChordChart'
 import './SongLibrary.css'
@@ -6,8 +6,8 @@ import './SongLibrary.css'
 interface SongLibraryProps {
   songs: Song[]
   chords: Chord[]
-  onDeleteSong: (songId: string) => void
-  onEditSong: (song: Song) => void
+  onDeleteSong: (_songId: string) => void
+  onEditSong: (_song: Song) => void
 }
 
 export const SongLibrary: React.FC<SongLibraryProps> = ({
@@ -17,24 +17,27 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
   onEditSong
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState<'name' | 'artist' | 'date'>('name')
+  const [sortBy, setSortBy] = useState<'title' | 'artist' | 'date'>('title')
   const [selectedSong, setSelectedSong] = useState<Song | null>(null)
 
   const getChordById = (id: string) => chords.find(chord => chord.id === id)
 
   const filteredAndSortedSongs = songs
     .filter(song => 
-      song.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (song.artist && song.artist.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) => {
       switch (sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name)
+        case 'title':
+          return a.title.localeCompare(b.title)
         case 'artist':
           return (a.artist || '').localeCompare(b.artist || '')
-        case 'date':
-          return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+        case 'date': {
+          const aDate = a.metadata?.createdAt || a.createdDate || new Date().toISOString()
+          const bDate = b.metadata?.createdAt || b.createdDate || new Date().toISOString()
+          return new Date(bDate).getTime() - new Date(aDate).getTime()
+        }
         default:
           return 0
       }
@@ -47,7 +50,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
     
     const link = document.createElement('a')
     link.href = url
-    link.download = `${song.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`
+    link.download = `${song.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -66,7 +69,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
           try {
             const song: Song = JSON.parse(e.target?.result as string)
             // Validate the song structure
-            if (song.name && song.chords && Array.isArray(song.chords)) {
+            if (song.title && (song.chords || song.sections) && (Array.isArray(song.chords) || Array.isArray(song.sections))) {
               // Add imported song to library (this would need to be handled by parent component)
               alert('Song imported successfully! (Note: This demo doesn\'t persist imported songs)')
             } else {
@@ -93,7 +96,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
         <div className="song-library__viewer">
           <div className="song-library__viewer-header">
             <div>
-              <h2>{selectedSong.name}</h2>
+              <h2>{selectedSong.title}</h2>
               {selectedSong.artist && <p className="song-library__artist">{selectedSong.artist}</p>}
             </div>
             <button
@@ -108,30 +111,30 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
             <div className="song-library__metadata">
               <h3>Song Information</h3>
               <div className="song-library__metadata-grid">
-                {selectedSong.metadata.key && (
+                {selectedSong.key && (
                   <div className="song-library__metadata-item">
                     <label>Key:</label>
-                    <span>{selectedSong.metadata.key}</span>
+                    <span>{selectedSong.key}</span>
                   </div>
                 )}
-                {selectedSong.metadata.tempo && (
+                {selectedSong.tempo && (
                   <div className="song-library__metadata-item">
                     <label>Tempo:</label>
-                    <span>{selectedSong.metadata.tempo} BPM</span>
+                    <span>{selectedSong.tempo} BPM</span>
                   </div>
                 )}
                 <div className="song-library__metadata-item">
                   <label>Difficulty:</label>
-                  <span>{getDifficultyText(selectedSong.metadata.difficulty || 1)}</span>
+                  <span>{getDifficultyText(selectedSong.metadata?.difficulty || 1)}</span>
                 </div>
-                {selectedSong.metadata.tags && selectedSong.metadata.tags.length > 0 && (
+                {selectedSong.metadata?.tags && selectedSong.metadata.tags.length > 0 && (
                   <div className="song-library__metadata-item">
                     <label>Tags:</label>
                     <span>{selectedSong.metadata.tags.join(', ')}</span>
                   </div>
                 )}
               </div>
-              {selectedSong.metadata.notes && (
+              {selectedSong.metadata?.notes && (
                 <div className="song-library__notes">
                   <label>Notes:</label>
                   <p>{selectedSong.metadata.notes}</p>
@@ -142,7 +145,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
             <div className="song-library__chord-sequence">
               <h3>Chord Sequence</h3>
               <div className="song-library__chords">
-                {selectedSong.chords.map((chordId, index) => {
+                {(selectedSong.chords || []).map((chordId, index) => {
                   const chord = getChordById(chordId)
                   if (!chord) return <div key={index}>Unknown chord</div>
                   
@@ -238,11 +241,11 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
           />
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'name' | 'artist' | 'date')}
+            onChange={(e) => setSortBy(e.target.value as 'title' | 'artist' | 'date')}
             className="song-library__select"
             title="Sort songs by"
           >
-            <option value="name">Sort by Name</option>
+            <option value="title">Sort by Title</option>
             <option value="artist">Sort by Artist</option>
             <option value="date">Sort by Date</option>
           </select>
@@ -269,7 +272,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
           {filteredAndSortedSongs.map(song => (
             <div key={song.id} className="song-library__card">
               <div className="song-library__card-header">
-                <h3 className="song-library__song-name">{song.name}</h3>
+                <h3 className="song-library__song-name">{song.title}</h3>
                 {song.artist && (
                   <p className="song-library__song-artist">{song.artist}</p>
                 )}
@@ -278,24 +281,24 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
               <div className="song-library__card-content">
                 <div className="song-library__song-info">
                   <div className="song-library__song-meta">
-                    <span>{song.chords.length} chords</span>
-                    {song.metadata.strummingPatterns && song.metadata.strummingPatterns.length > 0 && (
+                    <span>{(song.chords || []).length} chords</span>
+                    {song.metadata?.strummingPatterns && song.metadata.strummingPatterns.length > 0 && (
                       <span>• 🎵 Patterns</span>
                     )}
-                    {song.metadata.difficulty && (
+                    {song.metadata?.difficulty && (
                       <span>• {getDifficultyText(song.metadata.difficulty)}</span>
                     )}
-                    {song.metadata.key && (
-                      <span>• Key: {song.metadata.key}</span>
+                    {song.key && (
+                      <span>• Key: {song.key}</span>
                     )}
                   </div>
                   <div className="song-library__song-date">
-                    Created: {new Date(song.createdDate).toLocaleDateString()}
+                    Created: {new Date(song.metadata?.createdAt || song.createdDate || new Date()).toLocaleDateString()}
                   </div>
                 </div>
 
                 <div className="song-library__chord-preview">
-                  {song.chords.slice(0, 6).map((chordId, index) => {
+                  {(song.chords || []).slice(0, 6).map((chordId, index) => {
                     const chord = getChordById(chordId)
                     if (!chord) return null
                     
@@ -305,9 +308,9 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
                       </span>
                     )
                   })}
-                  {song.chords.length > 6 && (
+                  {(song.chords || []).length > 6 && (
                     <span className="song-library__chord-more">
-                      +{song.chords.length - 6} more
+                      +{(song.chords || []).length - 6} more
                     </span>
                   )}
                 </div>
@@ -334,7 +337,7 @@ export const SongLibrary: React.FC<SongLibraryProps> = ({
                 </button>
                 <button
                   onClick={() => {
-                    if (confirm(`Are you sure you want to delete "${song.name}"?`)) {
+                    if (confirm(`Are you sure you want to delete "${song.title}"?`)) {
                       onDeleteSong(song.id)
                     }
                   }}

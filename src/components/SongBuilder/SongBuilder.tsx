@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Chord, Song, StrummingPattern } from '../../types'
 import { ChordChart } from '../ChordChart/ChordChart'
 import './SongBuilder.css'
@@ -6,8 +6,8 @@ import './SongBuilder.css'
 interface SongBuilderProps {
   chords: Chord[]
   selectedChords: string[]
-  onUpdateChords: (chords: string[]) => void
-  onSaveSong: (song: Song) => void
+  onUpdateChords: (_chords: string[]) => void
+  onSaveSong: (_song: Omit<Song, 'id' | 'metadata'>) => void
   editingSong?: Song | null
 }
 
@@ -29,7 +29,6 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
     { id: 'general', name: 'General', pattern: '' }
   ])
   const [activePatternId, setActivePatternId] = useState<string | null>(null)
-  const patternInputRef = useRef<HTMLDivElement>(null)
 
   // Chord suggestion state
   const [showChordSuggestions, setShowChordSuggestions] = useState(false)
@@ -42,9 +41,9 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
   // Load editing song data when component mounts or editingSong changes
   useEffect(() => {
     if (editingSong) {
-      setSongName(editingSong.name)
+      setSongName(editingSong.title || '')
       setArtist(editingSong.artist || '')
-      setKey(editingSong.metadata?.key || '')
+      setKey(editingSong.key || '')
       setNotes(editingSong.metadata?.notes || '')
       // Load strumming patterns if they exist
       if (editingSong.metadata?.strummingPatterns) {
@@ -322,21 +321,26 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       return
     }
 
-    const song: Song = {
-      id: editingSong ? editingSong.id : `song-${Date.now()}`,
-      name: songName.trim(),
+    // Create a simple section with the selected chords for now
+    const sections: import('../../types').SongSection[] = [
+      {
+        id: 'main',
+        name: 'Main',
+        type: 'verse',
+        chords: selectedChords
+      }
+    ]
+
+    const songData: Omit<Song, 'id' | 'metadata'> = {
+      title: songName.trim(),
       artist: artist.trim() || undefined,
-      chords: selectedChords,
-      metadata: {
-        key: key.trim() || undefined,
-        notes: notes.trim() || undefined,
-        strummingPatterns: strummingPatterns.filter(p => p.pattern.trim() !== '' || p.name !== 'General')
-      },
-      createdDate: editingSong ? editingSong.createdDate : new Date().toISOString().split('T')[0],
-      modifiedDate: new Date().toISOString().split('T')[0]
+      key: key.trim() || undefined,
+      sections,
+      // Keep backward compatibility
+      chords: selectedChords
     }
 
-    onSaveSong(song)
+    onSaveSong(songData)
   }
 
   const exportToFile = () => {
@@ -345,17 +349,30 @@ export const SongBuilder: React.FC<SongBuilderProps> = ({
       return
     }
 
+    // Create a simple section for export
+    const sections: import('../../types').SongSection[] = [
+      {
+        id: 'main',
+        name: 'Main',
+        type: 'verse',
+        chords: selectedChords
+      }
+    ]
+
     const song: Song = {
       id: `song-${Date.now()}`,
-      name: songName.trim(),
+      title: songName.trim(),
       artist: artist.trim() || undefined,
-      chords: selectedChords,
+      key: key.trim() || undefined,
+      sections,
       metadata: {
-        key: key.trim() || undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        version: 1,
         notes: notes.trim() || undefined
       },
-      createdDate: new Date().toISOString().split('T')[0],
-      modifiedDate: new Date().toISOString().split('T')[0]
+      // Keep backward compatibility
+      chords: selectedChords
     }
 
     const dataStr = JSON.stringify(song, null, 2)

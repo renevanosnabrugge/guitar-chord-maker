@@ -1,3 +1,4 @@
+import React from 'react'
 import { Chord } from '../../types'
 import './ChordChart.css'
 
