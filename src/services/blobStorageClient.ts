@@ -253,7 +253,8 @@ export class BlobStorageClient {
    */
   private getBlobUrl(filename: string): string {
     const url = new URL(this.sasUrl)
-    url.pathname = `${url.pathname}/${filename}`
+    const normalizedPathname = url.pathname.endsWith('/') ? url.pathname.slice(0, -1) : url.pathname
+    url.pathname = `${normalizedPathname}/${filename}`
     return url.toString()
   }
 
